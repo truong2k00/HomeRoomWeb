@@ -1,0 +1,35 @@
+# EditorConfig helps maintain consistent coding styles across editors and IDEs
+# More at: https://EditorConfig.org
+
+# Root EditorConfig file
+root = true
+
+# Global settings (apply to all files)
+[*]
+end_of_line = crlf
+insert_final_newline = true
+charset = utf-8
+
+# Python files: 4-space indentation
+[*.py]
+indent_style = space
+indent_size = 4
+
+# Vue, SCSS, TS files: 2-space indentation
+[*.{vue,scss,ts}]
+indent_style = space
+indent_size = 2
+
+# JavaScript files: 2-space indentation
+[*.js]
+indent_style = space
+indent_size = 2
+
+# Tab indentation for Makefiles
+[Makefile]
+indent_style = tab
+
+# JSON and YAML files: 2-space indentation
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 2

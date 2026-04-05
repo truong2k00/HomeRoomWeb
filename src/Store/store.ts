@@ -1,0 +1,8 @@
+import { createStore } from 'vuex'
+import auth from './modules/authentication/axios/actionCreator'
+
+export default createStore({
+  modules: {
+    auth,
+  },
+})
