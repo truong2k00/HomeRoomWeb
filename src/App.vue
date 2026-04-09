@@ -75,6 +75,9 @@ handleSkinChanges();
     )}`">
       <RouterView />
       <ScrollToTop />
+      <AppSnackbar />
+      <GlobalLoader />
+      <AppSnackbarMuti />
     </VApp>
   </VLocaleProvider>
 </template>

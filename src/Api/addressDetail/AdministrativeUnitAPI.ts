@@ -1,6 +1,10 @@
 import { BaseApi } from "../BaseApi";
 import { HTTP } from "@/HTTPServices";
 import { Pagination } from "../PaginatedResponse";
+import {
+  AdministrativeUnitDTO,
+  CreateAdministrativeUnitDTO,
+} from "@/models/Lang/administrativeUnitDTO";
 
 export interface AdministrativeUnitParams extends Pagination {
   id: number;
@@ -30,6 +34,17 @@ class AdministrativeUnitApi extends BaseApi {
       HTTP.get(`api/AddressDetailUnit/GetTrativeByLevel/${params.id}`, {
         params,
       })
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  Create(addressDetailUnitDTO: CreateAdministrativeUnitDTO) {
+    return new Promise<AdministrativeUnitDTO>((resolve: any, reject: any) => {
+      HTTP.post(`api/AddressDetailUnit`, addressDetailUnitDTO)
         .then((res) => {
           resolve(res.data);
         })

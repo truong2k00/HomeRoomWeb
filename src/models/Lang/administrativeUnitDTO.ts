@@ -1,6 +1,6 @@
 export interface CreateAdministrativeUnitDTO {
   name: string;
-  parentId: string;
+  parentId?: string;
   type: number;
   countryId: number;
 }
@@ -12,6 +12,7 @@ export interface UpdateAdministrativeUnitDTO {
 export interface AdministrativeUnitDTO {
   id: string;
   name: string;
+  level: number;
   parentId: string;
   skipLevels: number[];
   type: number;

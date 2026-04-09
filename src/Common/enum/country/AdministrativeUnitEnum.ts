@@ -337,3 +337,51 @@ export function getProvincetypeInfo(type: AdminLevelType) {
       };
   }
 }
+
+//common
+
+// 👉 có thể refactor lại bằng cách tạo 1 file enum riêng cho phần này
+export const getTypeLevel = (type: number, levelType: number) => {
+  switch (levelType) {
+    case 1:
+      return getProvincetypeInfoLevel1(type);
+    case 2:
+      return getProvincetypeInfoLevel2(type);
+    case 3:
+      return getProvincetypeInfoLevel3(type);
+    case 4:
+      return getProvincetypeInfoLevel4(type);
+    default:
+      return { text: "none", color: "default" };
+  }
+};
+
+export const getTypeLevelSelect = (levelType: number) => {
+  switch (levelType) {
+    case 1:
+      return getProvinceTypeSelect1();
+    case 2:
+      return getProvinceTypeSelect2();
+    case 3:
+      return getProvinceTypeSelect3();
+    case 4:
+      return getProvinceTypeSelect4();
+    default:
+      return [{ text: "none", color: "default", value: 0 }];
+  }
+};
+
+export const keyTranslatedTitle = (level: number) => {
+  switch (level) {
+    case 1:
+      return "App.City.";
+    case 2:
+      return "App.Districts.";
+    case 3:
+      return "App.Ward.";
+    case 4:
+      return "App.Street.";
+    default:
+      return "";
+  }
+};

@@ -10,6 +10,7 @@
   "#ID": "#ID",
   "Showing": "Affichage",
   "to": "à",
+  "new" : "nouveau",
   "of": "sur",
   "entries": "entrées",
   "UI Elements": "ÉLÉMENTS DE L\"UI",
@@ -286,5 +287,6 @@
     },
     "administrator": "Administratrice",
     "businesscomfirmation": "Confirmation Commerciale"
-  }
+  },
+  "IsSelectItem": "Veuillez sélectionner un élément pour effectuer cette action."
 }
