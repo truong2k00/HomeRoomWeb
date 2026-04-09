@@ -5,25 +5,15 @@ import { useI18n } from "vue-i18n";
 
 import AdministrativeUnit from "@/views/apps/Addreess/AdministrativeUnit/index.vue";
 import CommonStrative from "@/views/apps/Addreess/AdministrativeUnit/CommonStrative.vue";
-
-import District from "@/views/apps/Addreess/District.vue";
-import Street from "@/views/apps/Addreess/Streets.vue";
-
 import CountrysApi from "@/Api/Lang/CountrysApi";
 import { CountrysDTO } from "@/models/Lang/CountrysDTO";
-import { CityResDTO } from "@/models/Lang/citysDTO";
-import { DistrictResDTO } from "@/models/Lang/DistrictDTO";
-import { WardResDTO } from "@/models/Lang/WarDTO";
-import Ward from "@/views/apps/Addreess/Ward.vue";
 import {
   getProvinceCity,
   getProvinceDistrict,
-  getProvinceStreet,
   getProvinceWard,
 } from "@/Common/enum/country/countryEnum";
-import { StreetsResDTO } from "@/models/Lang/StreetDTO";
 import { AdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
-import { getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4 } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
 
 // ENV avatar fallback
 const avatarNull = import.meta.env.VITE_DEFAULT_AVATAR;
@@ -38,15 +28,21 @@ const router = useRouter();
 
 // Country state
 const countryId = ref(Number(route.query.id) || 0);
-const countryData = ref<CountrysDTO>();
+const countryData = ref<CountrysDTO>({
+  id: 0,
+  countryName: "",
+  vietnamesCountryName: "",
+  areaCode: "",
+  skipLevel: [],
+  countryCode: "",
+  languageCode: "",
+  languageName: "",
+});
 
 const loadDataCountry = async () => {
-  try {
-    const res = await CountrysApi.GetById(countryId.value);
+  await CountrysApi.GetById(countryId.value).then((res) => {
     countryData.value = res;
-  } catch (error) {
-    console.error("Failed to load country data:", error);
-  }
+  }).catch((error) => { });
 };
 
 // Watch for country query id changes
@@ -169,20 +165,44 @@ watchEffect(() => {
 });
 
 // Called when user selects city
-const updateCity = (val: AdministrativeUnitDTO) => {
-  console.log("City selected:", val);
-  dataAddressUnit.value.city = val;
-};
-const updatedistrict = (val: AdministrativeUnitDTO) => {
-  dataAddress.value.district = val;
+const updateAddressUnit = (val: AdministrativeUnitDTO) => {
+  switch (val.level) {
+    case 1:
+      dataAddressUnit.value.city = val;
+      break;
+    case 2:
+      dataAddressUnit.value.district = val;
+      break;
+    case 3:
+      dataAddressUnit.value.ward = val;
+      break;
+    case 4:
+      dataAddressUnit.value.street = val;
+      break;
+  }
 };
 
-const updateWard = (val: AdministrativeUnitDTO) => {
-  dataAddress.value.ward = val;
-};
+const getMappedValue = (level: number): { level: number, data: AdministrativeUnitDTO } => {
+  const skipLevels = countryData.value?.skipLevel || [];
 
-const updateStreet = (val: AdministrativeUnitDTO) => {
-  dataAddress.value.street = val;
+  let current = level - 1;
+
+  while (current >= 1 && skipLevels.includes(current)) {
+    current--;
+  }
+
+  switch (current) {
+    case 1:
+      return { level: current, data: dataAddressUnit.value.city }; // Default fallback
+    case 2:
+      return { level: current, data: dataAddressUnit.value.district };
+    case 3:
+      return { level: current, data: dataAddressUnit.value.ward };
+    case 4:
+      return { level: current, data: dataAddressUnit.value.street };
+    default:
+      return { level: 0, data: {} as AdministrativeUnitDTO };
+  }
 };
 // Navigate to view district
 const viewDistrict = () => {
@@ -239,54 +259,55 @@ onMounted(async () => {
             <VCardTitle class="text-h3 mb-3">
               {{ t("App.Citys") }}
             </VCardTitle>
-            <AdministrativeUnit :level-type="1" @update:data="updateCity" :country="countryData" />
+            <AdministrativeUnit :level-type="1" @update:data="updateAddressUnit" :country="countryData" />
           </VCardItem>
         </VCol>
       </VRow>
     </VCard>
     <VRow>
-      <VCol v-if="(countryData?.skipLevels?.includes(2) ?? false)" cols="12" sm="6">
+      <VCol v-if="!(countryData.skipLevel?.includes(2) ?? false)" cols="12" sm="6">
         <VCardItem class="text-center">
           <VCardTitle class="text-h3 mb-3">
             {{ t("App.District") }} :
             {{
               dataAddress.city.id
                 ? t(
-                  "App.City." +
-                  getProvinceCity(dataAddress.city.type).text
+                  keyTranslatedTitle(2) +
+                  getProvincetypeInfoLevel1(getMappedValue(1).data.type).text
                 )
                 : ""
             }}
-            {{ dataAddress.city.countryName }}
+            {{ dataAddress.city.name }}
           </VCardTitle>
 
-          <CommonStrative :parent-id="dataAddress.city.id" :level-type="2" @update:data="updateCity"
-            :country="countryData" />
+
+          <CommonStrative :data="getMappedValue(2).data" :parent-id="getMappedValue(2).data.id" :level-type="3"
+            @update:data="updateAddressUnit" :country="countryData" />
           <!-- <CommonStrative :typeLevel="2" :parent-id="dataAddressUnit.city.id" @update:data="updateCity"
             :country="countryData" /> -->
         </VCardItem>
       </VCol>
-      <VCol cols="12" sm="6">
+      <VCol v-if="!(countryData.skipLevel?.includes(3) ?? false)" cols="12" sm="6">
         <VCardItem class="text-center">
           <VCardTitle class="text-h3 mb-3">
             {{ t("App.Wards") }}:
             {{
               dataAddress.district.id
                 ? t(
-                  "App.Districts." +
-                  getProvinceDistrict(
-                    dataAddress.district.type
+                  keyTranslatedTitle(2) +
+                  getProvincetypeInfoLevel2(
+                    getMappedValue(3).data.type
                   ).text
                 )
                 : ""
             }}
-            {{ dataAddress.district.name }}
+            {{ getMappedValue(3).data.name }}
           </VCardTitle>
-          <CommonStrative :parent-id="dataAddress.district.id" :level-type="3" @update:data="updateWard"
-            :country="countryData" />
+          <CommonStrative :data="getMappedValue(3).data" :parent-id="getMappedValue(3).data.id" :level-type="3"
+            @update:data="updateAddressUnit" :country="countryData" />
         </VCardItem>
       </VCol>
-      <VCol cols="12" sm="6">
+      <VCol v-if="!(countryData.skipLevel?.includes(4) ?? false)" cols="12" sm="6">
         <VCardItem class="text-center">
           <VCardTitle class="text-h3 mb-3">
             {{ t("App.Streets") }}:
@@ -294,15 +315,15 @@ onMounted(async () => {
               dataAddress.ward.id
                 ? t(
                   "App.Ward." +
-                  getProvinceWard(dataAddress.ward.type).text
+                  getProvinceWard(getMappedValue(4).data.type).text
                 )
                 : ""
             }}
-            {{ dataAddress.ward.name }}
+            {{ getMappedValue(4).data.name }}
           </VCardTitle>
 
-          <CommonStrative :parent-id="dataAddress.district.id" :level-type="4" @update:data="updateStreet"
-            :country="countryData" />
+          <CommonStrative :data="getMappedValue(4).data" :parent-id="getMappedValue(4).data.id" :level-type="4"
+            @update:data="updateAddressUnit" :country="countryData" />
         </VCardItem>
       </VCol>
     </VRow>

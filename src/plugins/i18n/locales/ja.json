@@ -10,6 +10,7 @@
   "Submit": "送信",
   "Showing": "表示中",
   "to": "から",
+  "new" : "新しい",
   "of": "の",
   "entries": "件",
   "UI Elements": "UI要素",
@@ -282,5 +283,6 @@
     },
     "administrator": "管理者",
     "businesscomfirmation": "ビジネス確認"
-  }
+  },
+  "IsSelectItem": "この操作を実行するには、アイテムを選択してください。"
 }

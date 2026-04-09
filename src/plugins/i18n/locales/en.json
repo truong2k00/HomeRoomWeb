@@ -10,6 +10,7 @@
   "Submit": "Submit",
   "Showing": "Showing",
   "to": "to",
+  "new": "new",
   "of": "of",
   "entries": "entries",
   "UI Elements": "UI Elements",
@@ -284,5 +285,6 @@
     },
     "administrator": "Administrator",
     "businesscomfirmation": "Business Comfirmation"
-  }
+  },
+  "IsSelectItem": "Please select an item to perform this action."
 }

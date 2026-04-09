@@ -10,6 +10,7 @@
   "Search": "Tìm Kiếm",
   "Showing": "Hiển thị từ",
   "to": "đến",
+  "new" : "mới",
   "of": "trong tổng số",
   "entries": "mục",
   "Admin Page": "Quản trị",
@@ -257,6 +258,7 @@
       "hamlet": "Thôn xóm",
       "alley": "Hẻm",
       "sector": "Khu",
+      "residential": "Khu dân cư",
       "hamletGroup": "Cụm thôn"
     },
     "searchFilter": "Bộ lọc tìm kiếm",
@@ -285,5 +287,6 @@
     },
     "administrator": "Quản trị hệ thống",
     "businesscomfirmation": "Xác nhận kinh doanh"
-  }
+  },
+  "IsSelectItem": "Vui lòng chọn một {0} mục để thực hiện hành động này."
 }

@@ -18,8 +18,8 @@ import "quill/dist/quill.snow.css";
 import { createApp } from "vue";
 import vue3GoogleLogin from "vue3-google-login";
 import store from "./Store/store";
-import { formatCurrency } from './plugins/utils/format'
-import { useBeforeUnload } from './plugins/utils/useBeforeUnload'
+import { formatCurrency } from "./plugins/utils/format";
+import { useBeforeUnload } from "./plugins/utils/useBeforeUnload";
 
 loadFonts();
 declare global {
@@ -52,8 +52,8 @@ window.fbAsyncInit = function () {
   fjs?.parentNode?.insertBefore(js, fjs);
 })(document, "script", "facebook-jssdk");
 
-app.config.globalProperties.$formatCurrency = formatCurrency
-app.config.globalProperties.$useBeforeUnload = useBeforeUnload
+app.config.globalProperties.$formatCurrency = formatCurrency;
+app.config.globalProperties.$useBeforeUnload = useBeforeUnload;
 // Use plugins
 app.use(vuetify);
 app.use(vue3GoogleLogin, {

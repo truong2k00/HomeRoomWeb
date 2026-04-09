@@ -4,10 +4,10 @@ import { paginationMeta } from "@/Api/paginationMeta";
 import { useI18n } from "vue-i18n";
 import { useTranslatedHeaders } from "@/plugins/i18n/translateHeader";
 
-import { headersCity } from "@/Data/Model/AdministrativeUnit/Header";
-import AdministrativeUnitAPI, { AdministrativeUnitParams } from "@/Api/addressDetail/AdministrativeUnitAPI";
+import { headersCity, headersDistrict, headersStreet, headersWard } from "@/Data/Model/AdministrativeUnit/Header";
+import AdministrativeUnitAPI, { AdministrativeUnitLevelParams, AdministrativeUnitParams } from "@/Api/addressDetail/AdministrativeUnitAPI";
 
-import { getProvincetypeInfoLevel1, getProvinceTypeSelect1, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, getProvinceTypeSelect1, getProvinceTypeSelect2, getProvinceTypeSelect3, getProvinceTypeSelect4 } from "@/Common/enum/country/AdministrativeUnitEnum";
 import { CountrysDTO } from "@/models/Lang/CountrysDTO";
 import { AdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
 
@@ -15,6 +15,7 @@ const { t } = useI18n();
 
 interface Props {
   country?: CountrysDTO;
+  parentId?: string;
   levelType: number;
 }
 
@@ -29,10 +30,10 @@ const emit = defineEmits<Emit>();
 const loadings = ref(false);
 const loadingsData = ref<AdministrativeUnitDTO[]>([]);
 
-const filters = ref<AdministrativeUnitParams>({
+const filters = ref<AdministrativeUnitLevelParams>({
   itemsPerPage: 5,
   page: 1,
-  id: 0,
+  id: "",
   totalItems: 0,
   selectAll: false,
 });
@@ -41,26 +42,27 @@ const editingMap = ref<Record<string, boolean>>({});
 
 // ================= API =================
 const loadDatas = async () => {
-  if (!props.country) {
+  if (!props.parentId) {
     return;
   }
   loadings.value = true;
-  await AdministrativeUnitAPI.GetAll({
+  await AdministrativeUnitAPI.GetTrativeByLevel({
     ...filters.value,
-    id: props.country?.id ?? 0,
+    id: props.parentId ?? '',
   }).then((res) => {
     loadingsData.value = res.data;
     filters.value = res.pagination;
     loadings.value = false;
   })
     .catch((error) => {
+      console.error("Load data error:", error);
       loadings.value = false;
     })
 }
 
 // ================= LIFECYCLE =================
 onMounted(() => {
-  filters.value.id = props.country?.id ?? 0;
+  filters.value.id = props.parentId ?? '';
 });
 
 // ================= WATCH =================
@@ -77,10 +79,10 @@ watch(
 );
 
 watch(
-  () => props.country,
+  () => props.parentId,
   (newCountry) => {
     if (newCountry) {
-      filters.value.id = newCountry.id;
+      filters.value.id = newCountry;
       loadDatas();
     }
   }
@@ -94,8 +96,24 @@ const handleOptionsUpdate = (options: any) => {
   loadDatas();
 };
 
+
 // ================= UI =================
-const translatedHeaders = useTranslatedHeaders(headersCity);
+const headers = () => {
+  switch (props.levelType) {
+    case 1:
+      return headersCity;
+    case 2:
+      return headersDistrict;
+    case 3:
+      return headersWard;
+    case 4:
+      return headersStreet;
+    default:
+      return [];
+  }
+}
+
+const translatedHeaders = useTranslatedHeaders(headers());
 
 const rowclick = (val: AdministrativeUnitDTO) => {
   emit("update:data", val);
@@ -109,28 +127,58 @@ const translatedTitle = (item: any) => {
   return t(keyTranslatedTitle(props.levelType) + item.title, "none");
 };
 
-const isCreateDialogVisible = ref(false);
-const updateData = (val: AdministrativeUnitDTO) => {
-  const pageSize = filters.value.itemsPerPage ?? 10;
 
-  const index = loadingsData.value.findIndex(item => item.id === val.id);
 
-  if (index !== -1) {
-    loadingsData.value[index] = val;
-  } else {
-    loadingsData.value.unshift(val);
-
-    if (loadingsData.value.length > pageSize) {
-      loadingsData.value.pop();
-    }
+// 👉 có thể refactor lại bằng cách tạo 1 file enum riêng cho phần này
+const getTypeLevel = (type: number) => {
+  switch (props.levelType) {
+    case 1:
+      return getProvincetypeInfoLevel1(type);
+    case 2:
+      return getProvincetypeInfoLevel2(type);
+    case 3:
+      return getProvincetypeInfoLevel3(type);
+    case 4:
+      return getProvincetypeInfoLevel4(type);
+    default:
+      return { text: "none", color: "default" };
   }
-}
+};
+
+const getTypeLevelSelect = () => {
+  console.log("level type", props.levelType);
+  switch (props.levelType) {
+    case 1:
+      return getProvinceTypeSelect1();
+    case 2:
+      return getProvinceTypeSelect2();
+    case 3:
+      return getProvinceTypeSelect3();
+    case 4:
+      return getProvinceTypeSelect4();
+    default:
+      return () => [];
+  }
+};
+
+const keyTranslatedTitle = (level: number) => {
+  switch (level) {
+    case 1:
+      return "App.City.";
+    case 2:
+      return "App.Districts.";
+    case 3:
+      return "App.Ward.";
+    case 4:
+      return "App.Street.";
+    default:
+      return "";
+  }
+};
 </script>
 
 <template>
   <div>
-    <CreateAddressUnitDialog v-model:is-dialog-visible="isCreateDialogVisible" :countrys="props.country"
-      :leveltype="props.levelType" @update:isDialogVisible="isCreateDialogVisible = $event" @update:data="updateData" />
     <VCard v-if="loadingsData" id="invoice-list">
       <VCardText class="d-flex align-center flex-wrap gap-4">
         <div class="me-3 d-flex gap-3">
@@ -143,7 +191,7 @@ const updateData = (val: AdministrativeUnitDTO) => {
             { value: -1, title: 'All' },
           ]" style="width: 6.25rem" @update:model-value="filters.itemsPerPage = parseInt($event, 10)" />
           <!-- 👉 Create invoice -->
-          <VBtn v-if="$can('manage', 'all')" prepend-icon="tabler-plus" @click="isCreateDialogVisible = true">
+          <VBtn v-if="$can('manage', 'all')" prepend-icon="tabler-plus" @click="">
             {{ t("Create") }}
           </VBtn>
         </div>
@@ -171,7 +219,7 @@ const updateData = (val: AdministrativeUnitDTO) => {
             <!-- <td>{{ item.raw.id }}</td> -->
             <td>{{ item.raw.name }}</td>
             <td v-if="$can('manage', 'all')">
-              <AppAutocomplete v-model="item.raw.type" :items="getProvinceTypeSelect1()" :item-title="translatedTitle"
+              <AppAutocomplete v-model="item.raw.type" :items="getTypeLevelSelect()" :item-title="translatedTitle"
                 item-value="value" :readonly="!editingMap[item.raw.id]" persistent-hint
                 :menu-props="{ maxHeight: '200px' }">
                 <template #append>
@@ -186,11 +234,11 @@ const updateData = (val: AdministrativeUnitDTO) => {
               </AppAutocomplete>
             </td>
             <td v-else>
-              <VChip :color="getProvincetypeInfoLevel1(item.raw.type).color" variant="outlined">
+              <VChip :color="getTypeLevel(item.raw.type).color" variant="outlined">
                 {{
                   t(
-                    "App.City." +
-                    getProvincetypeInfoLevel1(item.raw.type).text,
+                    "App.District." +
+                    getTypeLevel(item.raw.type).text,
                   )
                 }}
               </VChip>

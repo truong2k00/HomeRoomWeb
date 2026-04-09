@@ -11,7 +11,7 @@ export interface CountrysDTO {
   areaCode: string;
   languageCode: string;
   countryCode: string;
-  skipLevels: number[];
+  skipLevel: number[];
 }
 export interface CountrysResDTO {
   id: number;

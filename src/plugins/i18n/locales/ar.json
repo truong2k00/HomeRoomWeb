@@ -10,6 +10,7 @@
   "#ID": "#ID",
   "Showing": "عرض",
   "to": "إلى",
+  "new": "جديد",
   "of": "من",
   "entries": "عنصر",
   "UI Elements": "عناصر واجهة المستخدم",
@@ -283,5 +284,6 @@
     },
     "administrator": "المسؤول",
     "businesscomfirmation": "تأكيد الأعمال"
-  }
+  },
+  "IsSelectItem": "يرجى تحديد عنصر لتنفيذ هذا الإجراء."
 }

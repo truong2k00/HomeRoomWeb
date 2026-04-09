@@ -22,9 +22,9 @@ export class HTTPSingleton {
     responseType: "json",
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
-    onUploadProgress: (progressEvent: any) => { },
-    onDownloadProgress: (progressEvent: any) => { },
-    cancelToken: new axios.CancelToken((cancel: Canceler) => { }),
+    onUploadProgress: (progressEvent: any) => {},
+    onDownloadProgress: (progressEvent: any) => {},
+    cancelToken: new axios.CancelToken((cancel: Canceler) => {}),
   };
 
   private HTTP: AxiosInstance;
@@ -55,7 +55,7 @@ export class HTTPSingleton {
         } else {
           const refreshToken = Cookies.get("refresh-token")?.replace(
             /^"(.*)"$/,
-            "$1"
+            "$1",
           );
 
           if (refreshToken) {
@@ -67,7 +67,7 @@ export class HTTPSingleton {
                   headers: {
                     Authorization: `Bearer ${refreshToken}`,
                   },
-                }
+                },
               );
 
               const newToken = response.data?.accessToken;
@@ -91,15 +91,13 @@ export class HTTPSingleton {
       (error) => {
         // Do something with request error
         return Promise.reject(error);
-      }
+      },
     );
     this.HTTP.interceptors.response.use(
       (response) => {
         return response;
       },
       (error) => {
-        console.error("❌ HTTP Axios error:", error); // Log để kiểm tra
-
         if (error.response?.status === 401) {
           localStorage.removeItem("userData");
           localStorage.removeItem("auth-token");
@@ -107,11 +105,11 @@ export class HTTPSingleton {
           router.push("/login");
         }
         if (error.response?.status === 404) {
-          router.push({ name: 'not-authorized' }) // hoặc 404 page
+          router.push({ name: "not-authorized" }); // hoặc 404 page
         }
 
         return Promise.reject(error); // ❗ Đừng quên reject để .catch hoạt động
-      }
+      },
     );
   }
 }
@@ -130,9 +128,9 @@ export class HTTPDownloadSingleton {
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
     withCredentials: true,
-    onUploadProgress: (progressEvent: any) => { },
-    onDownloadProgress: (progressEvent: any) => { },
-    cancelToken: new axios.CancelToken((cancel: Canceler) => { }),
+    onUploadProgress: (progressEvent: any) => {},
+    onDownloadProgress: (progressEvent: any) => {},
+    cancelToken: new axios.CancelToken((cancel: Canceler) => {}),
   };
 
   private HTTP: AxiosInstance;
