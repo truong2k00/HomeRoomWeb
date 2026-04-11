@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import BusinessTypeAction from "../RegisterBusiness.vue";
 import typeApi from "@/Api/Business/BusinessType";
-import type { BusinessTypeResDTO } from "@/models/Admin/BusinessDTO";
 import TypeOfBusinessApi from "@/Api/Business/TypeOfBusiness";
+import type { BusinessTypeResDTO } from "@/models/Admin/BusinessDTO";
 import { TypeOfBusinessDTO } from "@/models/TypeOfBusiness/TypeOfBusinessDTO";
+import BusinessTypeAction from "../RegisterBusiness.vue";
 
 defineProps<{ id: string }>();
 

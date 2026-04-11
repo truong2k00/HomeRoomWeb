@@ -285,5 +285,11 @@
     "administrator": "المسؤول",
     "businesscomfirmation": "تأكيد الأعمال"
   },
-  "IsSelectItem": "يرجى تحديد عنصر لتنفيذ هذا الإجراء."
+  "IsSelectItem": "يرجى تحديد عنصر لتنفيذ هذا الإجراء.",
+  "Delete failed": "فشل الحذف",
+  "Delete successfully": "تم الحذف بنجاح",
+  "Update successfully": "تم التحديث بنجاح",
+  "Create successfully": "تم الإنشاء بنجاح",
+  "Create failed": "فشل الإنشاء",
+  "Update failed": "فشل التحديث"
 }

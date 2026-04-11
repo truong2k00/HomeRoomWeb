@@ -7,6 +7,7 @@ export interface CreateAdministrativeUnitDTO {
 export interface UpdateAdministrativeUnitDTO {
   name: string;
   id: string;
+  type: number;
   isActive: boolean;
 }
 export interface AdministrativeUnitDTO {
@@ -18,4 +19,5 @@ export interface AdministrativeUnitDTO {
   type: number;
   countryId: number;
   countryName: string;
+  isActive: boolean;
 }

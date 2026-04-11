@@ -61,7 +61,7 @@ export function getProvinceTypeSelect2() {
     { title: "district", color: "primary", value: AdminLevel2Type.District },
     { title: "county", color: "success", value: AdminLevel2Type.County },
     {
-      title: "city district",
+      title: "cityDistrict",
       color: "warning",
       value: AdminLevel2Type.CityDistrict,
     },
@@ -72,7 +72,7 @@ export function getProvinceTypeSelect2() {
       value: AdminLevel2Type.Municipality,
     },
     {
-      title: "sub prefecture",
+      title: "subPrefecture",
       color: "secondary",
       value: AdminLevel2Type.SubPrefecture,
     },
@@ -105,7 +105,7 @@ export function getProvinceTypeSelect4() {
     { title: "road", color: "success", value: AdminLevel4Type.Road },
     { title: "zone", color: "warning", value: AdminLevel4Type.Zone },
     {
-      title: "residential group",
+      title: "residential",
       color: "error",
       value: AdminLevel4Type.ResidentialGroup,
     },
@@ -114,7 +114,7 @@ export function getProvinceTypeSelect4() {
     { title: "alley", color: "tertiary", value: AdminLevel4Type.Alley },
     { title: "sector", color: "quaternary", value: AdminLevel4Type.Sector },
     {
-      title: "hamlet cluster",
+      title: "hamletGroup",
       color: "quinary",
       value: AdminLevel4Type.HamletCluster,
     },
@@ -315,28 +315,53 @@ export function getProvincetypeInfo(type: AdminLevelType) {
       return {
         value: AdminLevelType.Level1,
         color: "primary",
-        text: "province",
+        text: "Citys",
       };
     case AdminLevelType.Level2:
       return {
         value: AdminLevelType.Level2,
         color: "success",
-        text: "district",
+        text: "District",
       };
     case AdminLevelType.Level3:
       return {
         value: AdminLevelType.Level3,
         color: "warning",
-        text: "ward",
+        text: "Wards",
       };
     case AdminLevelType.Level4:
       return {
         value: AdminLevelType.Level4,
         color: "error",
-        text: "street",
+        text: "Streets",
       };
   }
 }
+
+export const getListAdminLevelType = () => {
+  return [
+    {
+      value: AdminLevelType.Level1,
+      color: "primary",
+      text: "Citys",
+    },
+    {
+      value: AdminLevelType.Level2,
+      color: "success",
+      text: "District",
+    },
+    {
+      value: AdminLevelType.Level3,
+      color: "warning",
+      text: "Wards",
+    },
+    {
+      value: AdminLevelType.Level4,
+      color: "error",
+      text: "Streets",
+    },
+  ];
+};
 
 //common
 

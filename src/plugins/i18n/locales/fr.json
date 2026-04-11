@@ -10,7 +10,7 @@
   "#ID": "#ID",
   "Showing": "Affichage",
   "to": "à",
-  "new" : "nouveau",
+  "new": "nouveau",
   "of": "sur",
   "entries": "entrées",
   "UI Elements": "ÉLÉMENTS DE L\"UI",
@@ -181,7 +181,6 @@
     "titleMXH": "Vous avez lié votre compte avec succès",
     "titleReform": "Pour terminer l\"inscription, veuillez saisir votre email ci-dessous."
   },
-
   "App": {
     "address": {
       "home": "Domicile",
@@ -288,5 +287,11 @@
     "administrator": "Administratrice",
     "businesscomfirmation": "Confirmation Commerciale"
   },
-  "IsSelectItem": "Veuillez sélectionner un élément pour effectuer cette action."
+  "IsSelectItem": "Veuillez sélectionner un élément pour effectuer cette action.",
+  "Delete failed": "Échec de la suppression",
+  "Delete successfully": "Suppression réussie",
+  "Update successfully": "Mise à jour réussie",
+  "Create successfully": "Création réussie",
+  "Create failed": "Échec de la création",
+  "Update failed": "Échec de la mise à jour"
 }

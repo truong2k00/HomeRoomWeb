@@ -259,7 +259,8 @@
       "alley": "Hẻm",
       "sector": "Khu",
       "residential": "Khu dân cư",
-      "hamletGroup": "Cụm thôn"
+      "hamletGroup": "Cụm thôn",
+      "residentialgroup": "Nhóm Dân Cư"
     },
     "searchFilter": "Bộ lọc tìm kiếm",
     "user": {
@@ -288,5 +289,12 @@
     "administrator": "Quản trị hệ thống",
     "businesscomfirmation": "Xác nhận kinh doanh"
   },
-  "IsSelectItem": "Vui lòng chọn một {0} mục để thực hiện hành động này."
+  "IsSelectItem": "Vui lòng chọn một {0} mục để thực hiện hành động này.",
+  "Delete failed": "Xóa thất bại",
+  "Delete successfully": "Xóa thành công",
+  "Update successfully": "Cập nhật thành công",
+  "Create successfully": "Tạo thành công",
+  "Create failed": "Tạo thất bại",
+  "Update failed": "Cập nhật thất bại",
+  "Select All" : "Hiển thị tất cả"
 }

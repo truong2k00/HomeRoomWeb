@@ -13,7 +13,8 @@ import {
   getProvinceWard,
 } from "@/Common/enum/country/countryEnum";
 import { AdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
-import { getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { AdminLevelType, getListAdminLevelType, getProvincetypeInfo, getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { useSnackbarStore } from "@/plugins/utils/snackbar";
 
 // ENV avatar fallback
 const avatarNull = import.meta.env.VITE_DEFAULT_AVATAR;
@@ -61,6 +62,32 @@ const dataAddressUnit = ref({
   ward: {} as AdministrativeUnitDTO,
   street: {} as AdministrativeUnitDTO,
 });
+
+
+
+const UpdateCoutryLevelSkip = async (): Promise<boolean> => {
+  try {
+    await CountrysApi.UpdateSkipLevel(
+      countryData.value.id,
+      countryData.value.skipLevel
+    );
+
+    useSnackbarStore().show(t("Update successfully"), "success");
+
+    // reset data
+    dataAddressUnit.value = {
+      city: {} as AdministrativeUnitDTO,
+      district: {} as AdministrativeUnitDTO,
+      ward: {} as AdministrativeUnitDTO,
+      street: {} as AdministrativeUnitDTO,
+    };
+
+    return true;
+  } catch (err) {
+    useSnackbarStore().show(t("Update failed"), "error");
+    return false;
+  }
+};
 
 const buildFullAddressUnit = () => {
   fullAddressUnit.value = [
@@ -221,6 +248,36 @@ onMounted(async () => {
     buildFullAddressUnit();
   } else viewDistrict();
 });
+
+watch(
+  () => [...countryData.value.skipLevel],
+  (newVal, oldVal) => {
+    newVal.filter(x => !oldVal.includes(x));
+    oldVal.filter(x => !newVal.includes(x));
+  }
+);
+
+const getCheckboxModel = (level: AdminLevelType) => computed({
+  get: () => !countryData.value.skipLevel.includes(level),
+  set: async (val: boolean) => {
+    const oldSkip = [...countryData.value.skipLevel]; // 🔥 backup
+
+    // 👉 tạo state mới
+    const newSkip = val
+      ? oldSkip.filter(x => x !== level) // checked → remove khỏi skip
+      : [...oldSkip, level];            // unchecked → thêm vào skip
+
+    // 👉 update UI trước
+    countryData.value.skipLevel = newSkip;
+
+    const res = await UpdateCoutryLevelSkip();
+
+    // ❌ rollback nếu fail
+    if (!res) {
+      countryData.value.skipLevel = oldSkip;
+    }
+  }
+});
 </script>
 
 <template>
@@ -252,6 +309,13 @@ onMounted(async () => {
             <p class="text-2xl mb-0">
               {{ fullAddressUnit }}
             </p>
+            <VRow>
+              <VCol v-for="item in getListAdminLevelType()" :key="item.value"
+                :title="t('App.' + getProvincetypeInfo(item.value).text)" cols="6" md="3">
+                <VCheckbox v-model="getCheckboxModel(item.value).value"
+                  :label="t('App.' + getProvincetypeInfo(item.value).text)" />
+              </VCol>
+            </VRow>
           </VCardItem>
         </VCol>
         <VCol cols="12" sm="6">
@@ -281,7 +345,7 @@ onMounted(async () => {
           </VCardTitle>
 
 
-          <CommonStrative :data="getMappedValue(2).data" :parent-id="getMappedValue(2).data.id" :level-type="3"
+          <CommonStrative :data="getMappedValue(2).data" :parent-id="getMappedValue(2).data.id" :level-type="2"
             @update:data="updateAddressUnit" :country="countryData" />
           <!-- <CommonStrative :typeLevel="2" :parent-id="dataAddressUnit.city.id" @update:data="updateCity"
             :country="countryData" /> -->

@@ -285,5 +285,11 @@
     "administrator": "প্ৰশাসক",
     "businesscomfirmation": "ব্যৱসায় নিশ্চয়তা"
   },
-  "IsSelectItem": "এই কাৰ্য সম্পাদন কৰিবলৈ অনুগ্ৰহ কৰি এটা আইটেম নিৰ্বাচন কৰক।"
+  "IsSelectItem": "এই কাৰ্য সম্পাদন কৰিবলৈ অনুগ্ৰহ কৰি এটা আইটেম নিৰ্বাচন কৰক।",
+  "Delete failed": "মচি পেলাবলৈ ব্যৰ্থ",
+  "Delete successfully": "সফলতাৰে মচি পেলোৱা হৈছে",
+  "Update successfully": "সফলতাৰে আপডেট কৰা হৈছে",
+  "Create successfully": "সফলতাৰে সৃষ্টি কৰা হৈছে",
+  "Create failed": "সৃষ্টি করতে ব্যর্থ",
+  "Update failed": "আপডেট করতে ব্যর্থ"
 }
