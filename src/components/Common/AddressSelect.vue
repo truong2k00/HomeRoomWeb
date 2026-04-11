@@ -80,7 +80,6 @@ watch(isIndeterminate, () => {
 
 <template>
   <!-- 👉 Dialog close btn -->
-
   <AppAutocomplete v-model="dataAddUserRole.userName" chips closable-chips multiple :items="dataFilter"
     item-title="userName" item-value="userName" label="Select">
     <template #chip="{ props, item }">

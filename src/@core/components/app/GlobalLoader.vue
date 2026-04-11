@@ -4,7 +4,8 @@ import { useGlobalLoader } from "@/plugins/utils/useGlobalLoader";
 const { isDialogVisible } = useGlobalLoader();
 </script>
 <template>
-  <div @click="isDialogVisible = !isDialogVisible" v-if="isDialogVisible" class="global-loader">
+  <!-- @click="isDialogVisible = !isDialogVisible"  -->
+  <div v-if="isDialogVisible" class="global-loader">
     <VProgressCircular :size="60" color="primary" indeterminate />
   </div>
 </template>

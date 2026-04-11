@@ -284,5 +284,12 @@
     "administrator": "管理者",
     "businesscomfirmation": "ビジネス確認"
   },
-  "IsSelectItem": "この操作を実行するには、アイテムを選択してください。"
+  "IsSelectItem": "この操作を実行するには、アイテムを選択してください。",
+  "Delete failed": "削除に失敗しました",
+  "Delete successfully": "削除に成功しました",
+  "Update successfully": "更新に成功しました",
+  "Create successfully": "作成に成功しました",
+  "Create failed": "作成に失敗しました",
+  "Update failed": "更新に失敗しました",
+  "Select All": "すべて選択"
 }

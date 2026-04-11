@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import type { GetByIdUserParams } from "@/Api/Business/Business";
 import BusinessApi from "@/Api/Business/Business";
 import Api from "@/Api/Participate/ParticipateApi";
@@ -12,11 +10,13 @@ import type { BusinessResDTO } from "@/models/Admin/BusinessDTO";
 import type { ParticipateDTO } from "@/models/Participate/ParticipateDTO";
 import BusinessHeader from "@/views/apps/business/BusinessHeader.vue";
 import BusinessProject from "@/views/apps/business/it/BusinessProject.vue";
-import Renal from "@/views/apps/business/it/Renal.vue";
 import Description from "@/views/apps/business/it/Description.vue";
 import News from "@/views/apps/business/it/News.vue";
+import Renal from "@/views/apps/business/it/Renal.vue";
 import Team from "@/views/apps/business/it/Team.vue";
 import UserConnections from "@/views/pages/user-profile/connections/index.vue";
+import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 const route = useRoute();
 const router = useRouter();
@@ -64,6 +64,7 @@ const loadAction = () => {
       loadings.value = false;
     });
 };
+
 
 const dataload = ref<BusinessResDTO>();
 

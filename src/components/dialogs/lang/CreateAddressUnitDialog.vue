@@ -4,9 +4,10 @@ import { CountrysDTO } from "@/models/Lang/CountrysDTO";
 import { requiredValidator } from "@/@core/utils/validators";
 import { useI18n } from "vue-i18n";
 import { AdministrativeUnitDTO, CreateAdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
-import { getTypeLevelSelect, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { getProvincetypeInfo, getTypeLevelSelect, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
 import AddressUnitApi from "@/Api/addressDetail/AdministrativeUnitAPI";
 import { useSnackbarStore } from "@/plugins/utils/snackbar";
+import { useGlobalLoader } from "@/plugins/utils/useGlobalLoader";
 
 const { t } = useI18n();
 
@@ -55,9 +56,10 @@ onMounted(() => {
 
 
 const OnSubmit = async () => {
+  useGlobalLoader().show();
   createDTO.value.countryId = props.countrys?.id || 0;
   createDTO.value.parentId = props.parentId;
-  AddressUnitApi.Create(createDTO.value)
+  await AddressUnitApi.Create(createDTO.value)
     .then((res) => {
       emit("update:data", res);
       emit("update:isDialogVisible", false);
@@ -65,6 +67,7 @@ const OnSubmit = async () => {
     .catch((error) => {
       useSnackbarStore().show(t("Error") + ": " + error.response.data.errors.name, "error");
     });
+  useGlobalLoader().hide();
 };
 
 const closeDialog = () => {
@@ -109,8 +112,9 @@ const toggleEdit = () => {
       <VCardText class="mt-6">
         <VForm ref="cityForm">
           <VRow>
-            <AppTextField :lang="locale" v-model="createDTO.name" :rules="[requiredValidator]" :label="t('App.Citys')"
-              :placeholder="t('App.City.Name')" />
+            <AppTextField :lang="locale" v-model="createDTO.name" :rules="[requiredValidator]"
+              :label="t('App.' + getProvincetypeInfo(props.leveltype).text)"
+              :placeholder="t(keyTranslatedTitle(props.leveltype) + 'Name')" />
           </VRow>
           <VRow>
             <AppAutocomplete v-model="createDTO.type" :items="getTypeLevelSelect(props.leveltype)"

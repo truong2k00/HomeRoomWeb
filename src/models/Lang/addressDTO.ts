@@ -26,6 +26,25 @@ export interface AddressDetailResDTO extends AddressDetailsDTO {
   addressString: string;
 }
 
+
+export interface AddressAdministrativeUnitDTO extends Ids {
+  addressType: AddressTypeEnum;
+  countrysId: number;
+  cityId?: string;
+  districtId?: string;
+  wardId?: string;
+  streetsId?: string;
+  specificAddress: string;
+}
+export interface AddressAdministrativeUnitResDTO extends AddressAdministrativeUnitDTO {
+  countrysName: string;
+  cityName: string;
+  districtName: string;
+  wardName: string;
+  streetsName: string;
+  addressString: string;
+}
+
 export const headers = generateI18nHeaders<AddressDetailResDTO>(t, [
   { key: "countrysName", fallback: "Country Name" },
   { key: "cityName", fallback: "City Name" },

@@ -286,5 +286,12 @@
     "administrator": "Administrator",
     "businesscomfirmation": "Business Comfirmation"
   },
-  "IsSelectItem": "Please select an item to perform this action."
+  "IsSelectItem": "Please select an item to perform this action.",
+  "Delete failed": "Delete failed",
+  "Delete successfully": "Delete successfully",
+  "Update successfully": "Update successfully",
+  "Create successfully": "Create successfully",
+  "Create failed": "Create failed",
+  "Update failed": "Update failed",
+  "Select All": "Select All"
 }

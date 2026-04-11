@@ -9,7 +9,7 @@ import AdministrativeUnitAPI, { AdministrativeUnitLevelParams, AdministrativeUni
 
 import { getProvincetypeInfo, getTypeLevel, getTypeLevelSelect, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
 import { CountrysDTO } from "@/models/Lang/CountrysDTO";
-import { AdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
+import { AdministrativeUnitDTO, UpdateAdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
 import CreateAddressUnitDialog from "@/components/dialogs/lang/CreateAddressUnitDialog.vue";
 import { useSnackbarStore } from "@/plugins/utils/snackbar";
 import { useGlobalLoader } from "@/plugins/utils/useGlobalLoader";
@@ -39,8 +39,10 @@ const filters = ref<AdministrativeUnitLevelParams>({
   itemsPerPage: 5,
   page: 1,
   id: '',
+  keyWords: '',
   totalItems: 0,
   selectAll: false,
+  level: props.levelType
 });
 
 const editingMap = ref<Record<string, boolean>>({});
@@ -48,6 +50,7 @@ const editingMap = ref<Record<string, boolean>>({});
 // ================= API =================
 const loadDatas = async () => {
   if (!props.parentId) {
+    loadingsData.value = [];
     return;
   }
   try {
@@ -59,7 +62,7 @@ const loadDatas = async () => {
     });
 
     loadingsData.value = res.data;
-    filters.value = res.pagination;
+    filters.value = { ...filters.value, ...res.pagination };
   } catch (error) {
   } finally {
     loadings.value = false;
@@ -81,6 +84,7 @@ watch(
     () => filters.value.page,
     () => filters.value.itemsPerPage,
     () => props.parentId,
+    () => filters.value.keyWords,
   ],
   () => {
     filters.value.id == props.parentId;
@@ -119,7 +123,15 @@ const rowclick = (val: AdministrativeUnitDTO) => {
 };
 
 const toggleEdit = (val: AdministrativeUnitDTO) => {
+  if (editingMap.value[val.id]) {
+    updateDataAfterEdit(val);
+  }
   editingMap.value[val.id] = !editingMap.value[val.id];
+  Object.keys(editingMap.value).forEach(key => {
+    if (!editingMap.value[key]) {
+      delete editingMap.value[key];
+    }
+  });
 };
 
 const translatedTitle = (item: any) => {
@@ -147,7 +159,6 @@ const getPreviousValidLevel = (
 };
 
 const createNew = () => {
-
   if (!props.parentId) {
     const prevLevel = getPreviousValidLevel(
       props.levelType,
@@ -160,7 +171,7 @@ const createNew = () => {
     }
 
     const label = t(
-      keyTranslatedTitle(prevLevel) +
+      "App." +
       getProvincetypeInfo(prevLevel).text
     );
 
@@ -186,11 +197,47 @@ const updateData = (val: AdministrativeUnitDTO) => {
     }
   }
 }
+
+const updateDataAfterEdit = async (val: AdministrativeUnitDTO) => {
+  const updatedaddressDetailUnitDTO = ({
+    id: val.id,
+    name: val.name,
+    type: val.type,
+    isActive: val.isActive,
+  } as UpdateAdministrativeUnitDTO);
+  await AdministrativeUnitAPI.updated(updatedaddressDetailUnitDTO).then((res) => {
+    const index = loadingsData.value.findIndex(item => item.id === res.id);
+
+    if (index !== -1) {
+      loadingsData.value[index] = res;
+    }
+  }).catch((err) => {
+    useSnackbarStore().show(t("Update failed"), "error");
+  });
+}
+
+const deleteasync = async (id: string) => {
+  await AdministrativeUnitAPI.delete(id).then((res) => {
+    if (res) {
+      loadDatas();
+      useSnackbarStore().show(t("Delete success"), "success");
+
+    }
+    else {
+      useSnackbarStore().show(t("Delete failed"), "error");
+    }
+  });
+};
+const toggleActive = (item: any) => {
+  if (editingMap.value[item.id]) {
+    item.isActive = !item.isActive;
+  }
+};
 </script>
 
 <template>
   <div>
-    <CreateAddressUnitDialog :parent-id="props.parentId" :leveltype="props.levelType"
+    <CreateAddressUnitDialog :countrys="props.country" :parent-id="props.parentId" :leveltype="props.levelType"
       v-model:is-dialog-visible="isDialogCreate" v-on:update:data="updateData" />
     <VCard v-if="loadingsData" id="invoice-list">
       <VCardText class="d-flex align-center flex-wrap gap-4">
@@ -207,6 +254,14 @@ const updateData = (val: AdministrativeUnitDTO) => {
           <VBtn v-if="$can('manage', 'all')" prepend-icon="tabler-plus" @click="createNew()">
             {{ t("Create") }}
           </VBtn>
+          <VCheckbox v-model="filters.selectAll" :label="t('Select All')" @change="() => {
+            if (filters.selectAll) {
+              filters.id = '';
+            } else {
+              filters.id = props.parentId ?? '';
+            }
+            loadDatas();
+          }" />
         </div>
 
         <VSpacer />
@@ -214,7 +269,7 @@ const updateData = (val: AdministrativeUnitDTO) => {
         <div class="d-flex align-center flex-wrap gap-4">
           <!-- 👉 Search  -->
           <div class="invoice-list-filter">
-            <!-- <AppTextField v-model="filters.keywords" :placeholder="t('Search')" density="compact" /> -->
+            <AppTextField v-model="filters.keyWords" :placeholder="t('Search')" density="compact" />
           </div>
 
           <!-- 👉 Select status -->
@@ -256,12 +311,12 @@ const updateData = (val: AdministrativeUnitDTO) => {
               </VChip>
             </td>
             <td>
-              <IconBtn v-if="$can('manage', 'all')">
-                <VIcon class="text-error" icon="tabler-trash" />
+              <IconBtn v-if="$can('manage', 'all') && editingMap[item.raw.id]" @click="">
+                <VIcon :class="item.raw.isActive ? 'text-success' : 'text-warning'"
+                  :icon="item.raw.isActive ? 'tabler-check' : 'tabler-circle'" @click="toggleActive(item.raw)" />
               </IconBtn>
-
-              <IconBtn v-if="$can('manage', 'all')" @click="">
-                <VIcon class="text-warning" icon="tabler-edit" />
+              <IconBtn v-if="$can('manage', 'all')">
+                <VIcon @click="deleteasync(item.raw.id)" class="text-error" icon="tabler-trash" />
               </IconBtn>
             </td>
             <!-- Các cột khác -->

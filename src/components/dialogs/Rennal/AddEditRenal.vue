@@ -166,7 +166,7 @@ const onSubmit = () => {
               <!-- 👉 category -->
               <VWindowItem>
                 <AppTextField label="Application Name" />
-                <AddressSelect />
+                <!-- <AddressSelect : /> -->
                 <h6 class="text-h6 my-4">
                   Category
                 </h6>

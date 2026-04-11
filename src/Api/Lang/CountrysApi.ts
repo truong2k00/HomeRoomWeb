@@ -41,7 +41,7 @@ class CountryAPI extends BaseApi {
           .catch((err) => {
             reject(err);
           });
-      }
+      },
     );
   }
   GetById(id: number) {
@@ -59,6 +59,17 @@ class CountryAPI extends BaseApi {
   Update(input: CountrysDTO) {
     return new Promise<CountrysResDTO>((resolve: any, reject: any) => {
       HTTP.put("api/Country", input)
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  UpdateSkipLevel(id: number, skip: number[]) {
+    return new Promise<CountrysResDTO>((resolve: any, reject: any) => {
+      HTTP.put(`api/Country/ChangeSkip?id=${id}`, skip)
         .then((res) => {
           resolve(res.data);
         })

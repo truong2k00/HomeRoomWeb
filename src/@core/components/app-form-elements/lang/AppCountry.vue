@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import api from "@/Api/Lang/CountrysApi";
 import { computed, defineEmits, onMounted, ref, useAttrs } from "vue";
 import { useI18n } from "vue-i18n";
-import api from "@/Api/Lang/CountrysApi";
 
 // Props
 const props = defineProps<{
@@ -31,7 +31,6 @@ const loadData = async () => {
       },
     }));
   } catch (error) {
-    console.error(error);
     items.value = loadFallbackItems();
   }
 };
@@ -101,36 +100,27 @@ const handleModelChange = (newValue: number) => {
 
 <template>
   <div class="app-select flex-grow-1" :class="$attrs.class">
-    <VLabel
-      v-if="label"
-      :for="elementId"
-      class="mb-1 text-body-2 text-high-emphasis"
-      :text="label"
-    />
-    <VSelect
-      ref="vSelectRef"
-      v-bind="{
-        ...$attrs,
-        class: null,
-        label: undefined,
-        items: computedItems,
-        itemTitle: 'title',
-        itemValue: 'value',
-        variant: 'outlined',
-        id: elementId,
-        searchable: true,
-        modelValue,
-        menuProps: {
-          contentClass: [
-            'app-inner-list',
-            'app-select__content',
-            'v-select__content',
-            $attrs.multiple !== undefined ? 'v-list-select-multiple' : '',
-          ],
-        },
-      }"
-      @update:modelValue="handleModelChange"
-    >
+    <VLabel v-if="label" :for="elementId" class="mb-1 text-body-2 text-high-emphasis" :text="label" />
+    <VSelect ref="vSelectRef" v-bind="{
+      ...$attrs,
+      class: null,
+      label: undefined,
+      items: computedItems,
+      itemTitle: 'title',
+      itemValue: 'value',
+      variant: 'outlined',
+      id: elementId,
+      searchable: true,
+      modelValue,
+      menuProps: {
+        contentClass: [
+          'app-inner-list',
+          'app-select__content',
+          'v-select__content',
+          $attrs.multiple !== undefined ? 'v-list-select-multiple' : '',
+        ],
+      },
+    }" @update:modelValue="handleModelChange">
       <template v-for="[name, fn] in Object.entries($slots)" :key="name">
         <slot :name="name" v-bind="fn ? fn() : {}" />
       </template>
