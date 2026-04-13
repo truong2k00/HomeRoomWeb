@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import roleApi from "@/Api/authen/roleAuthenticationApi";
+import UserApi from "@/Api/user/User";
 import { Permission } from "@/models/Admin/Auth/UserAbilityDTO";
-const avatarNull = import.meta.env.VITE_DEFAULT_AVATAR;
-import { VForm } from "vuetify/components/VForm";
-import UserApi, { GetUserParams } from "@/Api/user/User";
 import { RoleAddUserDTO } from "@/models/Role&UserAbility/RoleDTO";
 import { GetUserSelection } from "@/models/UserResDTO";
-import roleApi from "@/Api/authen/roleAuthenticationApi";
+import { VForm } from "vuetify/components/VForm";
+const avatarNull = import.meta.env.VITE_DEFAULT_AVATAR;
 
 interface Props {
   idRole: string;
@@ -140,11 +140,8 @@ watch(isIndeterminate, () => {
 </script>
 
 <template>
-  <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 900"
-    :model-value="props.isDialogVisible"
-    @update:model-value="onReset"
-  >
+  <VDialog :width="$vuetify.display.smAndDown ? 'auto' : 900" :model-value="props.isDialogVisible"
+    @update:model-value="onReset">
     <!-- 👉 Dialog close btn -->
     <DialogCloseBtn @click="onReset" />
 
@@ -160,41 +157,20 @@ watch(isIndeterminate, () => {
       <VCardText class="mt-6">
         <!-- 👉 Form -->
         <VForm ref="refPermissionForm">
-          <AppAutocomplete
-            v-model="dataAddUserRole.userName"
-            chips
-            closable-chips
-            multiple
-            :items="dataFilter"
-            item-title="userName"
-            item-value="userName"
-            label="Select"
-          >
+          <AppAutocomplete v-model="dataAddUserRole.userName" chips closable-chips multiple :items="dataFilter"
+            item-title="userName" item-value="userName" label="Select">
             <template #chip="{ props, item }">
-              <VChip
-                v-bind="props"
-                :prepend-avatar="item.raw.avartar ?? avatarNull"
-                :text="item.raw.userName"
-              />
+              <VChip v-bind="props" :prepend-avatar="item.raw.avartar ?? avatarNull" :text="item.raw.userName" />
             </template>
 
             <template #item="{ props, item }">
-              <VListItem
-                v-bind="props"
-                :prepend-avatar="item?.raw?.avartar ?? avatarNull"
-              >
+              <VListItem v-bind="props" :prepend-avatar="item?.raw?.avartar ?? avatarNull">
                 <template #title>
                   {{ item?.raw?.userName }}
                 </template>
                 <template #subtitle>
                   <div class="d-flex flex-wrap gap-1">
-                    <VChip
-                      v-for="(role, index) in item?.raw?.role"
-                      :key="index"
-                      color="primary"
-                      size="small"
-                      label
-                    >
+                    <VChip v-for="(role, index) in item?.raw?.role" :key="index" color="primary" size="small" label>
                       {{ role }}
                     </VChip>
                   </div>
@@ -221,8 +197,8 @@ watch(isIndeterminate, () => {
 <style lang="scss">
 .permission-table {
   td {
-    border-block-end: 1px solid
-      rgba(var(--v-border-color), var(--v-border-opacity));
+    border-block-end:
+      1px solid rgba(var(--v-border-color), var(--v-border-opacity));
     padding-block: 0.5rem;
 
     .v-checkbox {
