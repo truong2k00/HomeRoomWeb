@@ -1,6 +1,6 @@
-import { BaseApi } from "../BaseApi";
 import { HTTP } from "@/HTTPServices";
 import type { CountrysDTO, CountrysResDTO } from "@/models/Lang/CountrysDTO";
+import { BaseApi } from "../BaseApi";
 import { PaginatedResponse, Pagination } from "../PaginatedResponse";
 
 export interface GetContryParams extends Pagination {
@@ -59,6 +59,17 @@ class CountryAPI extends BaseApi {
   Update(input: CountrysDTO) {
     return new Promise<CountrysResDTO>((resolve: any, reject: any) => {
       HTTP.put("api/Country", input)
+        .then((res) => {
+          resolve(res.data);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  }
+  ChangeAllowCreate(id: number, allowCreate: boolean = false) {
+    return new Promise<CountrysResDTO>((resolve: any, reject: any) => {
+      HTTP.put(`api/Country/ChangeAllowCreate?id=${id}&allowCreate=${allowCreate}`)
         .then((res) => {
           resolve(res.data);
         })

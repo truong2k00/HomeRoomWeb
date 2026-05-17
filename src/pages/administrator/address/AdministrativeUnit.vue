@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import { ref, watch, watchEffect, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRoute, useRouter } from "vue-router";
 
-import AdministrativeUnit from "@/views/apps/Addreess/AdministrativeUnit/index.vue";
-import CommonStrative from "@/views/apps/Addreess/AdministrativeUnit/CommonStrative.vue";
 import CountrysApi from "@/Api/Lang/CountrysApi";
-import { CountrysDTO } from "@/models/Lang/CountrysDTO";
+import { AdminLevelType, getListAdminLevelType, getProvincetypeInfo, getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
 import {
-  getProvinceCity,
-  getProvinceDistrict,
-  getProvinceWard,
+  getProvinceWard
 } from "@/Common/enum/country/countryEnum";
 import { AdministrativeUnitDTO } from "@/models/Lang/administrativeUnitDTO";
-import { AdminLevelType, getListAdminLevelType, getProvincetypeInfo, getProvincetypeInfoLevel1, getProvincetypeInfoLevel2, getProvincetypeInfoLevel3, getProvincetypeInfoLevel4, keyTranslatedTitle } from "@/Common/enum/country/AdministrativeUnitEnum";
+import { CountrysDTO } from "@/models/Lang/CountrysDTO";
 import { useSnackbarStore } from "@/plugins/utils/snackbar";
+import CommonStrative from "@/views/apps/Addreess/AdministrativeUnit/CommonStrative.vue";
+import AdministrativeUnit from "@/views/apps/Addreess/AdministrativeUnit/index.vue";
 
 // ENV avatar fallback
 const avatarNull = import.meta.env.VITE_DEFAULT_AVATAR;
@@ -38,6 +36,7 @@ const countryData = ref<CountrysDTO>({
   countryCode: "",
   languageCode: "",
   languageName: "",
+  allowCreate: false,
 });
 
 const loadDataCountry = async () => {
@@ -278,6 +277,14 @@ const getCheckboxModel = (level: AdminLevelType) => computed({
     }
   }
 });
+
+const updateCoutry = async (allowCreate: boolean) => {
+  await CountrysApi.ChangeAllowCreate(countryData.value.id, allowCreate).then((res) => {
+    useSnackbarStore().show(t("Update successfully"), "success");
+  }).catch((error) => {
+    useSnackbarStore().show(t("Update failed"), "error");
+  });
+}
 </script>
 
 <template>
@@ -287,8 +294,12 @@ const getCheckboxModel = (level: AdminLevelType) => computed({
       <VRow>
         <VCol cols="12" sm="6">
           <VCardItem class="text-center">
-            <VCardTitle class="text-h2 mb-">
+            <VCardTitle class="text-h2 d-flex align-center justify-center">
               {{ t("App.Countrys") }}
+            </VCardTitle>
+            <VCardTitle class="d-flex align-center justify-center">
+              <VCheckbox @update:modelValue="updateCoutry" v-model="countryData.allowCreate"
+                :label="t('App.AllowCreateNewAddress')" />
             </VCardTitle>
             <VAvatar @click="viewDistrict" rounded :size="200" :color="!countryData?.areaCode ? 'primary' : undefined"
               :variant="!countryData?.areaCode ? 'tonal' : undefined">
@@ -315,6 +326,7 @@ const getCheckboxModel = (level: AdminLevelType) => computed({
                 <VCheckbox v-model="getCheckboxModel(item.value).value"
                   :label="t('App.' + getProvincetypeInfo(item.value).text)" />
               </VCol>
+
             </VRow>
           </VCardItem>
         </VCol>

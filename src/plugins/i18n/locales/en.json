@@ -181,6 +181,8 @@
     "titleReform": "To complete registration please enter your email below."
   },
   "App": {
+    "AllowCreateNewAddress": "Allow creating new address",
+    "AddNewAddress": "Add new address",
     "address": {
       "home": "Home",
       "office": "Office",
@@ -290,8 +292,14 @@
   "Delete failed": "Delete failed",
   "Delete successfully": "Delete successfully",
   "Update successfully": "Update successfully",
+  "Loading failed": "Loading failed",
   "Create successfully": "Create successfully",
   "Create failed": "Create failed",
   "Update failed": "Update failed",
-  "Select All": "Select All"
+  "Select All": "Select All",
+  "Rennal": {
+    "name": "Project Name",
+    "description": "Project Description",
+    "rennalTypeId": "Rennal Type"
+  }
 }

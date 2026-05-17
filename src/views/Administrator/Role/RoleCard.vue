@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Permission } from "@/@fake-db/types";
 import apiRole from "@/Api/authen/roleAuthenticationApi";
 import type { RoleDTO } from "@/models/Role&UserAbility/RoleDTO";
 import router from "@/router";
@@ -13,7 +12,7 @@ const loadRole = () => {
     .then((res) => {
       dataRole.value = res;
     })
-    .catch((err) => {});
+    .catch((err) => { });
 };
 
 interface Emit {
@@ -86,26 +85,14 @@ const reloaddata = (val: boolean) => {
 
           <div class="v-avatar-group">
             <template v-for="(user, index) in item.users" :key="user">
-              <VAvatar
-                v-if="
-                  item.users.length > 4 && item.users.length !== 4 && index < 4
-                "
-                @click="clickAvatar(user.idUser)"
-                size="36"
-                :image="user.avatar ?? avatarNull"
-              />
+              <VAvatar v-if="
+                item.users.length > 4 && item.users.length !== 4 && index < 4
+              " @click="clickAvatar(user.idUser)" size="36" :image="user.avatar ?? avatarNull" />
 
-              <VAvatar
-                v-if="item.users.length <= 4"
-                size="36"
-                @click="clickAvatar(user.idUser)"
-                :image="user.avatar ?? avatarNull"
-              />
+              <VAvatar v-if="item.users.length <= 4" size="36" @click="clickAvatar(user.idUser)"
+                :image="user.avatar ?? avatarNull" />
             </template>
-            <VAvatar
-              v-if="item.users.length > 4"
-              :color="$vuetify.theme.current.dark ? '#4A5072' : '#f6f6f7'"
-            >
+            <VAvatar v-if="item.users.length > 4" :color="$vuetify.theme.current.dark ? '#4A5072' : '#f6f6f7'">
               <span> +{{ item.users.length - 4 }} </span>
             </VAvatar>
           </div>
@@ -116,30 +103,15 @@ const reloaddata = (val: boolean) => {
             {{ item.roleName }}
           </h4>
           <div class="d-flex align-center">
-            <a
-              href="javascript:void(0)"
-              @click="editPermission(item.id, item.roleName)"
-            >
+            <a href="javascript:void(0)" @click="editPermission(item.id, item.roleName)">
               Edit Role
             </a>
 
             <VSpacer />
-            <VBtn
-              @click="RemoveUserToRole(item.id, item.roleName)"
-              icon
-              color="error"
-              variant="text"
-              size="x-small"
-            >
+            <VBtn @click="RemoveUserToRole(item.id, item.roleName)" icon color="error" variant="text" size="x-small">
               <VIcon size="24" icon="tabler-users-minus" />
             </VBtn>
-            <VBtn
-              @click="AddUserToRole(item.id, item.roleName)"
-              icon
-              color="primary"
-              variant="text"
-              size="x-small"
-            >
+            <VBtn @click="AddUserToRole(item.id, item.roleName)" icon color="primary" variant="text" size="x-small">
               <VIcon size="24" icon="tabler-users-plus" />
             </VBtn>
           </div>
@@ -149,24 +121,14 @@ const reloaddata = (val: boolean) => {
 
     <!-- 👉 Add New Role -->
     <VCol cols="12" sm="6" lg="4">
-      <VCard
-        class="h-100"
-        :ripple="false"
-        @click="isAddRoleDialogVisible = true"
-      >
+      <VCard class="h-100" :ripple="false" @click="isAddRoleDialogVisible = true">
         <VRow no-gutters class="h-100">
-          <VCol
-            cols="5"
-            class="d-flex flex-column justify-end align-center mt-5"
-          >
+          <VCol cols="5" class="d-flex flex-column justify-end align-center mt-5">
             <img width="85" :src="girlUsingMobile" />
           </VCol>
 
           <VCol cols="7">
-            <VCardText
-              class="d-flex flex-column align-end justify-end gap-2 h-100"
-              style="text-align: end"
-            >
+            <VCardText class="d-flex flex-column align-end justify-end gap-2 h-100" :style="'text-align: end'">
               <VBtn>Add New Role</VBtn>
               <span>Add role, if it doesn't exist.</span>
             </VCardText>
@@ -179,16 +141,8 @@ const reloaddata = (val: boolean) => {
 
   <!-- fadhskjfh -->
 
-  <AddEditRolesDialog
-    v-model:is-dialog-visible="isRoleDialogVisible"
-    :role-permissions="role"
-  />
+  <AddEditRolesDialog v-model:is-dialog-visible="isRoleDialogVisible" :role-permissions="role" />
 
-  <AddUserRoleCardDialog
-    :is-add="addorremove"
-    v-model:is-dialog-visible="isAdduserDialogVisible"
-    :id-role="role.id"
-    :-name="role.name"
-    v-on:update:reloaddata="reloaddata"
-  />
+  <AddUserRoleCardDialog :is-add="addorremove" v-model:is-dialog-visible="isAdduserDialogVisible" :id-role="role.id"
+    :-name="role.name" v-on:update:reloaddata="reloaddata" />
 </template>

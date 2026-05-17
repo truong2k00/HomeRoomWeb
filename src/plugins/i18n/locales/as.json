@@ -181,6 +181,8 @@
     "titleReform": "নিবন্ধ সম্পূর্ণ কৰিবলৈ, অনুগ্ৰহ কৰি তলত আপোনাৰ ইমেইল লিখক।"
   },
   "App": {
+    "AllowCreateNewAddress": "নতুন ঠিকনা সৃষ্টি কৰাৰ অনুমতি দিয়ক",
+    "AddNewAddress": "নতুন ঠিকনা যোগ কৰক",
     "address": {
       "home": "ঘৰ",
       "office": "কাৰ্যালয়",
@@ -289,7 +291,14 @@
   "Delete failed": "মচি পেলাবলৈ ব্যৰ্থ",
   "Delete successfully": "সফলতাৰে মচি পেলোৱা হৈছে",
   "Update successfully": "সফলতাৰে আপডেট কৰা হৈছে",
+  "Loading failed": "লোড করতে ব্যর্থ",
   "Create successfully": "সফলতাৰে সৃষ্টি কৰা হৈছে",
   "Create failed": "সৃষ্টি করতে ব্যর্থ",
-  "Update failed": "আপডেট করতে ব্যর্থ"
+  "Update failed": "আপডেট করতে ব্যর্থ",
+  "Select All": "সকল দেখাও",
+  "Rennal": {
+    "name": "প্ৰকল্পৰ নাম",
+    "description": "প্ৰকল্পৰ বিৱৰণ",
+    "rennalTypeId": "ভাড়াৰ ধৰণ"
+  }
 }

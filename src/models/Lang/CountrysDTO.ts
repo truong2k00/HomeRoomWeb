@@ -11,12 +11,15 @@ export interface CountrysDTO {
   areaCode: string;
   languageCode: string;
   countryCode: string;
+  allowCreate: boolean;
   skipLevel: number[];
 }
 export interface CountrysResDTO {
   id: number;
   vietnamesCountryName: string;
+  allowCreate: boolean;
   countryName: string;
+  skipLevel: number[];
 }
 
 export const headers = generateI18nHeaders<CountrysResDTO>(t, [

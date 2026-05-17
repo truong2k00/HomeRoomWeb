@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { VDataTableServer } from "vuetify/labs/VDataTable";
 import type { UserProperties } from "@/@fake-db/types";
 import { paginationMetaText } from "@/@fake-db/utils";
 import BussinessApi, { type GetBusinessParams } from "@/Api/Business/Business";
@@ -9,6 +8,7 @@ import type { BusinessResDTO } from "@/models/Admin/BusinessDTO";
 import AddNewUserDrawer from "@/views/apps/user/list/AddNewUserDrawer.vue";
 import { useUserListStore } from "@/views/apps/user/useUserListStore";
 import type { Options } from "@core/types";
+import { VDataTableServer } from "vuetify/labs/VDataTable";
 
 // 👉 Store
 const userListStore = useUserListStore();
@@ -45,7 +45,6 @@ const data = ref<BusinessResDTO[]>();
 const loadData = () => {
   BussinessApi.GetAllBusiness(getBusinessParams.value).then((res) => {
     data.value = res.data;
-    console.log(data.value);
     getBusinessParams.value = {
       ...getBusinessParams.value,
       ...res.pagination,
@@ -111,70 +110,45 @@ const handleClick = (id: string) => {
   <section>
     <VCard>
       <VCardText class="d-flex flex-wrap gap-4">
-        <AppSelect
-          :model-value="getBusinessParams.itemsPerPage"
-          :items="[
-            { value: 10, title: '10' },
-            { value: 25, title: '25' },
-            { value: 50, title: '50' },
-            { value: 100, title: '100' },
-            { value: -1, title: 'All' },
-          ]"
-          style="width: 5rem"
-          @update:model-value="
+        <AppSelect :model-value="getBusinessParams.itemsPerPage" :items="[
+          { value: 10, title: '10' },
+          { value: 25, title: '25' },
+          { value: 50, title: '50' },
+          { value: 100, title: '100' },
+          { value: -1, title: 'All' },
+        ]" style="width: 5rem;" @update:model-value="
             getBusinessParams.itemsPerPage = parseInt($event, 10)
-          "
-        />
+            " />
 
         <VSpacer />
 
         <div class="d-flex align-center flex-wrap gap-4">
           <!-- 👉 Search  -->
-          <AppTextField
-            v-model="getBusinessParams.keywords"
-            placeholder="Search "
-            density="compact"
-            style="width: 18.5rem"
-          />
+          <AppTextField v-model="getBusinessParams.keywords" placeholder="Search " density="compact"
+            style="width: 18.5rem;" />
         </div>
       </VCardText>
 
       <VDivider />
 
       <!-- SECTION datatable -->
-      <VDataTableServer
-        v-model:items-per-page="getBusinessParams.itemsPerPage"
-        v-model:page="getBusinessParams.page"
-        :items="data"
-        :items-length="totalUsers"
-        :headers="headers"
-        class="text-no-wrap"
-        @update:options="options = $event"
-      >
+      <VDataTableServer v-model:items-per-page="getBusinessParams.itemsPerPage" v-model:page="getBusinessParams.page"
+        :items="data" :items-length="totalUsers" :headers="headers" class="text-no-wrap"
+        @update:options="options = $event">
         <!-- Business -->
         <template #item.business="{ item }">
           <div class="d-flex align-center">
-            <VAvatar
-              size="38"
-              :variant="!item.raw.avartar ? 'tonal' : undefined"
-              class="me-3"
-            >
-              <VImg
-                :src="
-                  item.raw.avartar ??
-                  'https://res.cloudinary.com/dnitjp0ng/image/upload/v1744476928/QLTB/default/DefaultUserList.jpg'
-                "
-              />
+            <VAvatar size="38" :variant="!item.raw.avartar ? 'tonal' : undefined" class="me-3">
+              <VImg :src="item.raw.avartar ??
+                'https://res.cloudinary.com/dnitjp0ng/image/upload/v1744476928/QLTB/default/DefaultUserList.jpg'
+                " />
             </VAvatar>
             <div class="d-flex flex-column">
               <h6 class="text-body-1 font-weight-medium">
-                <RouterLink
-                  :to="{
-                    name: 'apps-business-view',
-                    query: { tab: 'News', id: handleClick(item.raw.id) },
-                  }"
-                  class="user-list-name"
-                >
+                <RouterLink :to="{
+                  name: 'apps-business-view',
+                  query: { tab: 'News', id: handleClick(item.raw.id) },
+                }" class="user-list-name">
                   {{ item.raw.name }}
                 </RouterLink>
               </h6>
@@ -186,12 +160,7 @@ const handleClick = (id: string) => {
         </template>
         <!-- Action -->
         <template #item.action="{ item }">
-          <VChip
-            label
-            size="small"
-            class="text-capitalize"
-            :color="GetActions(item.raw.action).color"
-          >
+          <VChip label size="small" class="text-capitalize" :color="GetActions(item.raw.action).color">
             {{ GetActions(item.raw.action).text }}
           </VChip>
         </template>
@@ -204,12 +173,7 @@ const handleClick = (id: string) => {
 
         <template #item.active="{ item }">
           <span class="truncate-description">
-            <VChip
-              :color="getActivesBool(item.raw.active).color"
-              size="small"
-              label
-              class="text-capitalize"
-            >
+            <VChip :color="getActivesBool(item.raw.active).color" size="small" label class="text-capitalize">
               {{ getActivesBool(item.raw.active).text }}
             </VChip>
           </span>
@@ -218,9 +182,7 @@ const handleClick = (id: string) => {
         <template #bottom>
           <VDivider />
 
-          <div
-            class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3"
-          >
+          <div class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3">
             <p class="text-sm text-disabled mb-0">
               {{
                 paginationMetaText(
@@ -231,10 +193,7 @@ const handleClick = (id: string) => {
               }}
             </p>
 
-            <ReusablePagination
-              v-model="getBusinessParams.page"
-              :length="Number(getBusinessParams.totalPages)"
-            />
+            <ReusablePagination v-model="getBusinessParams.page" :length="Number(getBusinessParams.totalPages)" />
           </div>
         </template>
 
@@ -247,22 +206,15 @@ const handleClick = (id: string) => {
             <VIcon icon="tabler-trash" />
           </IconBtn>
 
-          <VBtn
-            icon
-            color="medium-emphasis"
-            density="comfortable"
-            variant="text"
-          >
+          <VBtn icon color="medium-emphasis" density="comfortable" variant="text">
             <VIcon size="24" icon="tabler-dots-vertical" />
 
             <VMenu activator="parent">
               <VList>
-                <VListItem
-                  :to="{
-                    name: 'apps-business-add&edit',
-                    query: { id: handleClick(item.raw.id) },
-                  }"
-                >
+                <VListItem :to="{
+                  name: 'apps-business-add&edit',
+                  query: { id: handleClick(item.raw.id) },
+                }">
                   <VListItemTitle>View</VListItemTitle>
                 </VListItem>
                 <VListItem link>
@@ -277,10 +229,7 @@ const handleClick = (id: string) => {
     </VCard>
 
     <!-- 👉 Add New User -->
-    <AddNewUserDrawer
-      v-model:isDrawerOpen="isAddNewUserDrawerVisible"
-      @user-data="addNewUser"
-    />
+    <AddNewUserDrawer v-model:isDrawerOpen="isAddNewUserDrawerVisible" @user-data="addNewUser" />
   </section>
 </template>
 
