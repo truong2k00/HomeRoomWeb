@@ -10,7 +10,7 @@
   "Submit": "送信",
   "Showing": "表示中",
   "to": "から",
-  "new" : "新しい",
+  "new": "新しい",
   "of": "の",
   "entries": "件",
   "UI Elements": "UI要素",
@@ -179,6 +179,8 @@
     "titleReform": "登録を完了するには、以下にメールアドレスを入力してください。"
   },
   "App": {
+    "AllowCreateNewAddress": "新しい住所の作成を許可する",
+    "AddNewAddress": "新しい住所を追加",
     "address": {
       "home": "自宅",
       "office": "職場",
@@ -288,8 +290,14 @@
   "Delete failed": "削除に失敗しました",
   "Delete successfully": "削除に成功しました",
   "Update successfully": "更新に成功しました",
+  "Loading failed": "読み込みに失敗しました",
   "Create successfully": "作成に成功しました",
   "Create failed": "作成に失敗しました",
   "Update failed": "更新に失敗しました",
-  "Select All": "すべて選択"
+  "Select All": "すべて選択",
+  "Rennal": {
+    "name": "プロジェクト名",
+    "description": "プロジェクトの説明",
+    "rennalTypeId": "レンタルタイプ"
+  }
 }

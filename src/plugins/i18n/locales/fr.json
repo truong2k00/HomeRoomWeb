@@ -182,6 +182,8 @@
     "titleReform": "Pour terminer l\"inscription, veuillez saisir votre email ci-dessous."
   },
   "App": {
+    "AllowCreateNewAddress": "Autoriser la création d'une nouvelle adresse",
+    "AddNewAddress": "Ajouter une nouvelle adresse",
     "address": {
       "home": "Domicile",
       "office": "Bureau",
@@ -291,7 +293,14 @@
   "Delete failed": "Échec de la suppression",
   "Delete successfully": "Suppression réussie",
   "Update successfully": "Mise à jour réussie",
+  "Loading failed": "Échec du chargement",
   "Create successfully": "Création réussie",
   "Create failed": "Échec de la création",
-  "Update failed": "Échec de la mise à jour"
+  "Update failed": "Échec de la mise à jour",
+  "Select All": "Afficher tout",
+  "Rennal": {
+    "name": "Nom du projet",
+    "description": "Description du projet",
+    "rennalTypeId": "Type de location"
+  }
 }

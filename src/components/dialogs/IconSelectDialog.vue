@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue'
 import SettingSystem from '@/Api/Setting/SettingSystem'
+import { ref, watch } from 'vue'
 
 const icons = ref<any[]>([])
 const result = ref<any[]>([])
@@ -138,8 +138,8 @@ const colors = [
             <VIcon :color="props.colorValue" :icon="'tabler-' + props.modelValue" />
           </VAvatar>
           <!-- <VIcon size="24" color="primary" :icon="'tabler-' + props.modelValue" /> -->
-          <VSelect v-model="color" :items="colors" density="compact" style="max-width:120px">
-            <!-- item -->
+          <VSelect v-model="color" :items="colors" density="compact" style="max-width: 120px;">
+            <!-- item -->z
             <template #item="{ props, item }">
               <VListItem v-bind="props">
                 <template #prepend>
@@ -172,7 +172,7 @@ const colors = [
           <VTextField v-model="keyword" label="Search icon" density="compact" clearable @input="searchIcon" />
 
           <!-- icon list -->
-          <div class="d-flex flex-wrap" style="max-height:400px; overflow-y:auto" @scroll="handleScroll">
+          <div class="d-flex flex-wrap" style="max-height: 400px; overflow-y: auto;" @scroll="handleScroll">
 
             <VCard v-for="icon in visibleIcons" :key="icon.name" class="ma-2 cursor-pointer" width="70" height="70"
               :color="icon.name === props.modelValue ? 'primary' : undefined" variant="tonal"

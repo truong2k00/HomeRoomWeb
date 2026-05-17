@@ -1,5 +1,6 @@
 import { AddressTypeEnum } from "@/Common/enum/AddressType";
 
+import { AdminLevel1Type, AdminLevel2Type, AdminLevel3Type, AdminLevel4Type } from "@/Common/enum/country/AdministrativeUnitEnum";
 import { useI18n } from "vue-i18n";
 import { generateI18nHeaders } from "../BaseDTO";
 
@@ -26,14 +27,23 @@ export interface AddressDetailResDTO extends AddressDetailsDTO {
   addressString: string;
 }
 
+export interface AddressAdministrativeUnitCreateDTO extends Ids {
+  administrativeUnitID: string;
+  specificAddress: string;
+  addressType: AddressTypeEnum;
+}
 
 export interface AddressAdministrativeUnitDTO extends Ids {
   addressType: AddressTypeEnum;
   countrysId: number;
   cityId?: string;
+  typeCity?: AdminLevel1Type;
   districtId?: string;
+  typeDistrict?: AdminLevel2Type;
   wardId?: string;
+  typeWard?: AdminLevel3Type;
   streetsId?: string;
+  typeStreet?: AdminLevel4Type;
   specificAddress: string;
 }
 export interface AddressAdministrativeUnitResDTO extends AddressAdministrativeUnitDTO {

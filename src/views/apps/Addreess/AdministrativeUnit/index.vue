@@ -192,7 +192,7 @@ const toggleActive = (item: any) => {
             { value: 50, title: '50' },
             { value: 100, title: '100' },
             { value: -1, title: 'All' },
-          ]" style="width: 6.25rem" @update:model-value="filters.itemsPerPage = parseInt($event, 10)" />
+          ]" style='width: 6.25rem;' @update:model-value="filters.itemsPerPage = parseInt($event, 10)" />
           <!-- 👉 Create invoice -->
           <VBtn v-if="$can('manage', 'all')" prepend-icon="tabler-plus" @click="isCreateDialogVisible = true">
             {{ t("Create") }}

@@ -1,10 +1,10 @@
+import router from "@/router";
 import axios, {
   type AxiosInstance,
   type AxiosRequestConfig,
   type Canceler,
 } from "axios";
 import Cookies from "js-cookie";
-import router from "@/router";
 
 const HOST = import.meta.env.VITE_APP_ROOT_API;
 
@@ -16,15 +16,16 @@ export class HTTPSingleton {
     baseURL: HOST,
     headers: {
       "Content-Type": "application/json",
+      "Accept-Language": "vi",
       "Access-Control-Allow-Origin": "*",
     },
     timeout: 1000000,
     responseType: "json",
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
-    onUploadProgress: (progressEvent: any) => {},
-    onDownloadProgress: (progressEvent: any) => {},
-    cancelToken: new axios.CancelToken((cancel: Canceler) => {}),
+    onUploadProgress: (progressEvent: any) => { },
+    onDownloadProgress: (progressEvent: any) => { },
+    cancelToken: new axios.CancelToken((cancel: Canceler) => { }),
   };
 
   private HTTP: AxiosInstance;
@@ -120,7 +121,7 @@ export class HTTPDownloadSingleton {
     baseURL: HOST,
     headers: {
       "Content-Type": "application/json",
-
+      "Accept-Language": "vi"
       // 'Access-Control-Allow-Origin': '*',
     },
     timeout: 1000000,
@@ -128,9 +129,9 @@ export class HTTPDownloadSingleton {
     xsrfCookieName: "XSRF-TOKEN",
     xsrfHeaderName: "X-XSRF-TOKEN",
     withCredentials: true,
-    onUploadProgress: (progressEvent: any) => {},
-    onDownloadProgress: (progressEvent: any) => {},
-    cancelToken: new axios.CancelToken((cancel: Canceler) => {}),
+    onUploadProgress: (progressEvent: any) => { },
+    onDownloadProgress: (progressEvent: any) => { },
+    cancelToken: new axios.CancelToken((cancel: Canceler) => { }),
   };
 
   private HTTP: AxiosInstance;

@@ -180,6 +180,8 @@
     "titleReform": "لإكمال التسجيل الرجاء إدخال بريدك الإلكتروني أدناه."
   },
   "App": {
+    "AllowCreateNewAddress": "السماح بإنشاء عنوان جديد",
+    "AddNewAddress": "إضافة عنوان جديد",
     "address": {
       "home": "المنزل",
       "office": "المكتب",
@@ -289,7 +291,14 @@
   "Delete failed": "فشل الحذف",
   "Delete successfully": "تم الحذف بنجاح",
   "Update successfully": "تم التحديث بنجاح",
+  "Loading failed": "فشل التحميل",
   "Create successfully": "تم الإنشاء بنجاح",
   "Create failed": "فشل الإنشاء",
-  "Update failed": "فشل التحديث"
+  "Update failed": "فشل التحديث",
+  "Select All": "عرض الجميع",
+  "Rennal": {
+    "name": "اسم المشروع",
+    "description": "وصف المشروع",
+    "rennalTypeId": "نوع الإيجار"
+  }
 }

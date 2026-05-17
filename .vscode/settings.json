@@ -116,4 +116,6 @@
     "src/plugins/i18n/locales",
     "src/@core/components/app-form-elements/lang"
   ],
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "vi",
 }

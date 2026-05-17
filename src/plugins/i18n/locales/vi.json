@@ -10,7 +10,7 @@
   "Search": "Tìm Kiếm",
   "Showing": "Hiển thị từ",
   "to": "đến",
-  "new" : "mới",
+  "new": "mới",
   "of": "trong tổng số",
   "entries": "mục",
   "Admin Page": "Quản trị",
@@ -182,6 +182,8 @@
     "titleReform": "Để hoàn tất đăng ký, vui lòng nhập email của bạn bên dưới."
   },
   "App": {
+    "AllowCreateNewAddress": "Cho phép tạo địa chỉ mới",
+    "AddNewAddress": "Thêm địa chỉ mới.",
     "address": {
       "home": "Nhà riêng",
       "office": "Công ty",
@@ -207,7 +209,7 @@
       "languageCode": "Mã ngôn ngữ",
       "countryCode": "Mã quốc gia"
     },
-   "language": {
+    "language": {
       "vi": "Tiếng Việt",
       "en": "Tiếng Anh",
       "fr": "Tiếng Pháp",
@@ -296,5 +298,11 @@
   "Create successfully": "Tạo thành công",
   "Create failed": "Tạo thất bại",
   "Update failed": "Cập nhật thất bại",
-  "Select All" : "Hiển thị tất cả"
+  "Loading failed": "Tải thất bại",
+  "Select All": "Hiển thị tất cả",
+  "Rennal": {
+    "name": "Tên dự án",
+    "description": "Mô tả",
+    "renalTypeId": "Loại hình bất động sản"
+  }
 }

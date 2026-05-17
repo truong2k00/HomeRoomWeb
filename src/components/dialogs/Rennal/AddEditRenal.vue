@@ -1,5 +1,16 @@
 <script setup lang="ts">
+import { requiredValidator } from '@/@core/utils/validators';
+import AddressAdministrativeUnitApi from '@/Api/addressDetail/addressAdminstrativeUnitAPI';
+import CountrysApi from '@/Api/Lang/CountrysApi';
+import { AddressTypeEnum } from '@/Common/enum/AddressType';
+import { AdminLevelType } from '@/Common/enum/country/AdministrativeUnitEnum';
+import { RenalDTO } from '@/models/Business/Renal/RenalDTO';
+import { AddressAdministrativeUnitCreateDTO, AddressAdministrativeUnitDTO, AddressAdministrativeUnitResDTO } from '@/models/Lang/addressDTO';
+import { CountrysResDTO } from '@/models/Lang/CountrysDTO';
 import laptopGirl from '@images/illustrations/laptop-girl.png';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   isDialogVisible: boolean
@@ -10,7 +21,22 @@ const emit = defineEmits<{
   (e: 'updatedData', val: unknown): void
 }>()
 
-const currentStep = ref(0)
+const dataCoutrySelect = ref<CountrysResDTO>();
+
+const addressFilter = ref<AddressAdministrativeUnitResDTO[]>([])
+
+const GetAllAdress = async () => {
+  await AddressAdministrativeUnitApi.GetAllAddress()
+    .then((res) => {
+      addressFilter.value = res;
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
+
+const currentStep = ref(0);
 
 const createApp = [
   {
@@ -35,84 +61,7 @@ const createApp = [
   },
 ]
 
-const categories = [
-  {
-    icon: 'tabler-briefcase',
-    color: 'info',
-    title: 'CRM Application',
-    subtitle: 'Scales with any business',
-    slug: 'crm-application',
-  },
-  {
-    icon: 'tabler-shopping-cart',
-    color: 'success',
-    title: 'Ecommerce Platforms',
-    subtitle: 'Grow Your Business With App',
-    slug: 'ecommerce-application',
-  },
-  {
-    icon: 'tabler-device-laptop',
-    color: 'error',
-    title: 'Online Learning platform',
-    subtitle: 'Start learning today',
-    slug: 'online-learning-application',
-  },
-]
-
-const frameworks = [
-  {
-    icon: 'tabler-brand-react-native',
-    color: 'info',
-    title: 'React Native',
-    subtitle: 'Create truly native apps',
-    slug: 'react-framework',
-  },
-  {
-    icon: 'tabler-brand-angular',
-    color: 'error',
-    title: 'Angular',
-    subtitle: 'Most suited for your application',
-    slug: 'angular-framework',
-  },
-  {
-    icon: 'tabler-brand-html5',
-    color: 'warning',
-    title: 'HTML',
-    subtitle: 'Progressive Framework',
-    slug: 'html-framework',
-  },
-  {
-    icon: 'tabler-brand-python',
-    color: 'primary',
-    title: 'Python',
-    subtitle: 'js web frameworks',
-    slug: 'js-framework',
-  },
-]
-
-const databases = [
-  {
-    icon: 'tabler-brand-firebase',
-    color: 'error',
-    title: 'Firebase',
-    subtitle: 'Cloud Firestore',
-    slug: 'firebase-database',
-  },
-  {
-    icon: 'tabler-brand-amazon',
-    color: 'warning',
-    title: 'AWS',
-    subtitle: 'Amazon Fast NoSQL Database',
-    slug: 'aws-database',
-  },
-  {
-    icon: 'tabler-database',
-    color: 'info',
-    title: 'MySQL',
-    subtitle: 'Basic MySQL database',
-    slug: 'mysql-database',
-  },
-]
+const renalData = ref<RenalDTO>();
 
 const createAppData = ref({
   category: 'crm-application',
@@ -125,21 +74,138 @@ const createAppData = ref({
   isSave: false,
 })
 
+const AddressUnitDTO = ref<AddressAdministrativeUnitCreateDTO>({
+  addressType: AddressTypeEnum.Home,
+  administrativeUnitID: "",
+  id: "",
+  specificAddress: ""
+})
+
+const addressSelect = ref<AddressAdministrativeUnitDTO>({
+  id: "",
+  addressType: AddressTypeEnum.Home,
+  countrysId: 0,
+  cityId: undefined,
+  districtId: undefined,
+  wardId: undefined,
+  streetsId: undefined,
+  specificAddress: "",
+})
+
 const dialogVisibleUpdate = (val: boolean) => {
   emit('update:isDialogVisible', val)
   currentStep.value = 0
 }
 
+const getMappedValue = (
+  level: number
+): { level: number; data: string } => {
+  const skipLevels = dataCoutrySelect.value?.skipLevel || [];
+
+  let current = level - 1;
+
+  while (current >= 1 && skipLevels.includes(current)) {
+    current--;
+  }
+
+  let data: any = "";
+
+  switch (current) {
+    case 1:
+      data = addressSelect.value?.cityId;
+      break;
+    case 2:
+      data = addressSelect.value?.districtId;
+      break;
+    case 3:
+      data = addressSelect.value?.wardId;
+      break;
+    case 4:
+      data = addressSelect.value?.streetsId;
+      break;
+    default:
+      return { level: 0, data: "" };
+  }
+
+  // ✅ chỉ check null/undefined (không dùng !data)
+  if (data === null || data === undefined) {
+    return { level: current, data: "" };
+  }
+
+  return { level: current, data };
+};
+
+const updateAddressUnit = (val: string, level: number) => {
+  switch (level) {
+    case 1:
+      addressSelect.value.cityId = val;
+      break;
+    case 2:
+      addressSelect.value.districtId = val;
+      break;
+    case 3:
+      addressSelect.value.wardId = val;
+      break;
+    case 4:
+      addressSelect.value.streetsId = val;
+      break;
+  }
+};
+
+const getModelByLevel = (level: number) => {
+  const mappedInfo = computed(() => getMappedValue(level));
+
+  return computed<string>({
+    get: () => mappedInfo.value.data ?? "",
+
+    set: (val: string) => {
+      if (!mappedInfo.value.level) return;
+
+      updateAddressUnit(val ?? "", mappedInfo.value.level);
+    }
+  });
+};
+onMounted(() => {
+  GetAllAdress()
+})
+
 watch(props, () => {
   if (!props.isDialogVisible)
     currentStep.value = 0
 })
+watch(
+  () => addressSelect.value.countrysId,
+  (val) => {
+    if (val == null) return; // handle null + undefined
+
+    SlectDataCoutry(val);
+  }
+);
+
+const SlectDataCoutry = async (val: number) => {
+  const res = await CountrysApi.GetById(val);
+  dataCoutrySelect.value = res;
+}
 
 const onSubmit = () => {
   // eslint-disable-next-line no-alert
   alert('submitted...!!')
   emit('updatedData', createAppData.value)
 }
+
+const search = ref("");
+
+const showAddNew = computed(() => {
+
+  if (!search.value) {
+    addressSelect.value.id = "";
+    return false
+  }
+
+  return !addressFilter.value.some(x =>
+    x.addressString.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
@@ -165,90 +231,81 @@ const onSubmit = () => {
             <VWindow v-model="currentStep" class="disable-tab-transition stepper-content">
               <!-- 👉 category -->
               <VWindowItem>
-                <AppTextField label="Application Name" />
-                <!-- <AddressSelect : /> -->
-                <h6 class="text-h6 my-4">
-                  Category
-                </h6>
-                <VRadioGroup v-model="createAppData.category">
-                  <VList class="card-list">
-                    <VListItem v-for="category in categories" :key="category.title"
-                      @click="createAppData.category = category.slug">
-                      <template #prepend>
-                        <VAvatar size="48" rounded variant="tonal" :color="category.color" :icon="category.icon" />
-                      </template>
-
-                      <VListItemTitle class="mb-1">
-                        {{ category.title }}
-                      </VListItemTitle>
-                      <VListItemSubtitle>
-                        {{ category.subtitle }}
-                      </VListItemSubtitle>
-
-                      <template #append>
-                        <VRadio :value="category.slug" />
-                      </template>
-                    </VListItem>
-                  </VList>
-                </VRadioGroup>
+                <VForm> {{ addressSelect }}
+                  <!--
+                  {{ search }}
+                  {{ dataCoutrySelect }} -->
+                  {{ getModelByLevel(2) }}
+                  <AppAutocomplete v-model:search="search" v-model="addressSelect.id" closable-chips
+                    :items="addressFilter" item-title="addressString" item-value="id" :label="t('App.Address')">
+                    <template #append-item>
+                      <VListItem v-if="showAddNew">
+                        <template #title>
+                          <span class="text-warning font-weight-medium">
+                            <VIcon icon="mdi-plus" size="16" />
+                            {{ t('App.AddNewAddress') }} "{{ search }}"
+                          </span>
+                        </template>
+                      </VListItem>
+                    </template>
+                  </AppAutocomplete>
+                  <!-- <AppTextField :label="t('App.Address')" /> -->
+                  <!-- <AddressSelect : /> -->
+                  <h6 class="text-h6 my-4">
+                    {{ t("App.Address") }}
+                  </h6>
+                  <VRow>
+                    <VCol md="6" lg="4" :sm="6">
+                      <AppCountry v-model="addressSelect.countrysId" :label="t('App.Countrys')" />
+                    </VCol>
+                    <VCol md="6" lg="4" :sm="6">
+                      <AppAutoAdminitrativeUnit v-model="addressSelect.cityId"
+                        :allow-create="dataCoutrySelect?.allowCreate" :level="AdminLevelType.Level1"
+                        :countrys-id="addressSelect.countrysId" :rules="[requiredValidator]" :lable="t('App.City.Name')"
+                        :placeholder="t('App.City.Name')" />
+                    </VCol>
+                    <VCol md="6" lg="4" :sm="6">
+                      <AppAutoAdminitrativeUnit :level-type="3" :allow-create="dataCoutrySelect?.allowCreate"
+                        :level="AdminLevelType.Level2" :countrys-id="addressSelect.countrysId"
+                        :parent-id="addressSelect.cityId" :rules="[requiredValidator]" :lable="t('App.Districts.Name')"
+                        :placeholder="t('App.Districts.Name')" v-model="addressSelect.districtId" />
+                    </VCol>
+                    <VCol md="6" lg="4" :sm="6">
+                      <AppAutoAdminitrativeUnit :level-type="4" @update:data="updateAddressUnit"
+                        :allow-create="dataCoutrySelect?.allowCreate" :level="AdminLevelType.Level3"
+                        :countrys-id="addressSelect.countrysId" :parent-id="addressSelect.districtId"
+                        :rules="[requiredValidator]" :lable="t('App.Ward.Name')" :placeholder="t('App.Ward.Name')"
+                        v-model="addressSelect.wardId" />
+                    </VCol>
+                    <VCol md="6" lg="4" :sm="6">
+                      <AppAutoAdminitrativeUnit :level-type="5" :parent-id="addressSelect.wardId"
+                        @update:data="updateAddressUnit" :allow-create="dataCoutrySelect?.allowCreate"
+                        :level="AdminLevelType.Level4" :countrys-id="addressSelect.countrysId"
+                        v-model="addressSelect.streetsId" :rules="[requiredValidator]" :lable="t('App.Street.Name')"
+                        :placeholder="t('App.Street.Name')" />
+                    </VCol>
+                  </VRow>
+                </VForm>
               </VWindowItem>
 
               <!-- 👉 Frameworks -->
               <VWindowItem>
                 <h6 class="text-h6 mb-4">
-                  Select Framework
+                  Details Renal
                 </h6>
-                <VRadioGroup v-model="createAppData.framework">
-                  <VList class="card-list">
-                    <VListItem v-for="framework in frameworks" :key="framework.title"
-                      @click="createAppData.framework = framework.slug">
-                      <template #prepend>
-                        <VAvatar size="48" rounded variant="tonal" :color="framework.color">
-                          <VIcon :icon="framework.icon" />
-                        </VAvatar>
-                      </template>
-                      <VListItemTitle class="mb-1">
-                        {{ framework.title }}
-                      </VListItemTitle>
-                      <VListItemSubtitle>
-                        {{ framework.subtitle }}
-                      </VListItemSubtitle>
-                      <template #append>
-                        <VRadio :value="framework.slug" />
-                      </template>
-                    </VListItem>
-                  </VList>
-                </VRadioGroup>
+                <AppTextField :label="t('Rennal.name')" :placeholder="t('Rennal.name')" :v-model="renalData?.name" />
+                <AppTextField :label="t('Rennal.description')" :placeholder="t('Rennal.name')"
+                  :v-model="renalData?.description" />
+                <AppTextField :label="t('Rennal.renalTypeId')" :placeholder="t('Rennal.name')"
+                  :v-model="renalData?.renalTypeId" />
               </VWindowItem>
 
               <!-- 👉 Database Engine -->
               <VWindowItem>
-                <AppTextField label="Database Name" />
-
                 <h6 class="text-h6 my-4">
-                  Select Database Engine
+                  Image Rennal
                 </h6>
-                <VRadioGroup v-model="createAppData.database">
-                  <VList class="card-list">
-                    <VListItem v-for="database in databases" :key="database.title"
-                      @click="createAppData.database = database.slug">
-                      <template #prepend>
-                        <VAvatar size="48" rounded variant="tonal" :color="database.color">
-                          <VIcon :icon="database.icon" />
-                        </VAvatar>
-                      </template>
-                      <VListItemTitle class="mb-1">
-                        {{ database.title }}
-                      </VListItemTitle>
-                      <VListItemSubtitle>
-                        {{ database.subtitle }}
-                      </VListItemSubtitle>
-                      <template #append>
-                        <VRadio :value="database.slug" />
-                      </template>
-                    </VListItem>
-                  </VList>
-                </VRadioGroup>
+
               </VWindowItem>
 
               <!-- 👉 Billing form -->
@@ -259,25 +316,7 @@ const onSubmit = () => {
 
                 <VForm>
                   <VRow>
-                    <VCol cols="12">
-                      <AppTextField v-model="createAppData.cardNumber" label="Card Number" type="number" />
-                    </VCol>
 
-                    <VCol cols="12" md="6">
-                      <AppTextField v-model="createAppData.cardName" label="Name on Card" />
-                    </VCol>
-
-                    <VCol cols="6" md="3">
-                      <AppTextField v-model="createAppData.cardExpiry" label="Expiry" />
-                    </VCol>
-
-                    <VCol cols="6" md="3">
-                      <AppTextField v-model="createAppData.cardCvv" label="CVV" />
-                    </VCol>
-
-                    <VCol cols="12">
-                      <VSwitch v-model="createAppData.isSave" label="Save Card for future billing?" />
-                    </VCol>
                   </VRow>
                 </VForm>
               </VWindowItem>
